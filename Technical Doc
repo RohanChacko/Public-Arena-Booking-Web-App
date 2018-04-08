@@ -1,0 +1,43 @@
+												
+
+										Venue Booking System (chacko.iiit.ac.in)
+												Team Number: 52
+
+We will be using the Python module Flask, to build the application, with the SQLite3 database system.
+
+Project technicalities:
+
+			-Database tables:
+					# Users: Keyed by the User ID. Have attributes: Name, privilege level, and related to the 		         events database.
+
+					# Venues: Keyed by the Venue ID. Have attributes: Name, Type, Description, Capacity, and 				  related to the events database. Requires a particular privilege level to book certain 		  venues.
+					
+					# Events: Keyed by Event ID. Have attributes: Name, Description, Begin & End time, Venue				  (foreign key), User ID (of the event creator, foreign key), Type of event (public/			  private).
+					
+					# Invitations: Keyed by ID. Have attributes: Inviter (foreign key), Invitee (foreign key), 					   event ID (foreign key).
+
+
+			-Views:
+					# Public view (Homepage) : Shows only public event cards, login options, etc.
+
+					# User view (Dashboard) : Shows user event cards (public and private), venue & time selection 							  (1st stage), etc.
+
+					# Event view 1: Event creation (2nd stage) for details beyond venue and time taken in 					        user view form.
+
+					# Event view 2: Event creation (3rd stage) for inviting other users to the created event.
+
+					# Event summary: Shows all event details including time, venue, creator, invitees, etc.
+
+
+			-Process:
+					# The user can log in, and view the events they are a part of, either as a creator or invitee. 
+
+					# The user can click on any of these cards to get the card for the event, which 				  contains important information of the event.
+
+					# The user can fill an event creation form, in which they specify the venue and time they want it for, and when they want it (First Stage).
+					
+					# Based on their form, a list of appropriate venues that are available during the time (checked by querying the events database) is fetched. The user can then choose the venue and go to the next stage of booking.
+
+					# In the next stage, the user can fill in the details of the event, like the description, type, invitees, etc.
+
+					# Then, the user confirms the booking, and returns to their home view, the newly created event now visible here.
