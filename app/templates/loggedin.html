@@ -1,0 +1,13 @@
+<!--DOCTYPE HTML-->
+
+{% extends "base.html" %}
+
+{% block content0 %}
+	<h1>User: {{ user.username }}</h1>
+    <hr>
+    {% for book in books %}
+    <p>
+    {{ book.venue.username }} says: <b>{{ book.timestamp }}</b>
+    </p>
+    {% endfor %}
+{% endblock %}
