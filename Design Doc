@@ -1,0 +1,28 @@
+											IIIT Venues (chacko.iiit.ac.in)
+
+The goal is to build an application that allows people to easily schedule events and reserve venues for these events.
+
+The different parts of the application are:
+	Users:
+		# Can be created in the database, and allowed to log in to create/view events
+		# Have a privilege level that allows them to book different kinds of venues
+		# Can create, update and delete events
+		# Can make events available to the public, or keep them private and invite other users of their choice
+		# Can view the events they are invited to, accept or decline invitations, and view public events
+
+	Venues:
+		# Have a profile, detailing the location, purpose, and capacity
+		# Can be booked and linked to events
+		# Have a minimum privilege level which the person attempting to book must satisfy
+
+	Events:
+		# Can be public (appearing on the home screen of every user) or private (appearing on the home screen of invited users only)
+		# Have an associated date/time and venue
+		# Can be modified only by the user who created the event
+
+Goals for first evaluation:
+# Build the functionality to create and login a user
+# Build the system and models to create new events and invite users (without privileges)
+# Build a barebones front-end so that the functionality implemented can be tested
+
+
