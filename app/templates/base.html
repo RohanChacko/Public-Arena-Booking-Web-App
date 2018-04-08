@@ -1,0 +1,196 @@
+<!--DOCTYPE HTML-->
+
+<html lang="en">
+    
+    <head>
+        <title>::Venue Booking::</title>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/materialize.min.css') }}" media="screen,projection"/>
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+
+    <body>
+
+<!--Nav Bar-->
+          <nav>
+            <div class="nav-wrapper">
+              <a href="#" class="brand-logo center" style="font-weight: 100;font-size: 2rem;">IIIT Hyderabad</a>
+              <ul class="left hide-on-med-and-down">
+                             
+                {% if current_user.is_anonymous %}
+                    <li class="active"><a href="#">Home</a></li>
+                {% else %}
+                    <li class="active"><a href="{{ url_for('user', username=current_user.username) }}">Dashboard</a></li>
+                {% endif %}
+                
+                    <li><a href="#">Events</a></li>
+              </ul>
+
+              <ul class="right hide-on-med-and-down">
+                {% if current_user.is_anonymous %}
+                  <li onclick="openoverlay()"><a href="#"><i class="material-icons left">account_circle</i>Log in/Sign Up</a></li>
+
+                  <!--Begin of overlay. Login page appears as overlay only if user is not logged in-->
+
+                    <div id="Log" class="overlay">
+                      <a href="javascript:void(0)" class="closebtn" onclick="exitoverlay()">&times;</a>
+                      
+
+                        <div class="overlay-content row">
+                            <div class = "col s6">
+                                <h6>Sign In</h6>
+                            {% block content1 %}
+                                <form action="" method="post" class = "col s12">
+                                        {{ form.hidden_tag() }}
+                                        <div class="row formrow">
+                                        
+                                            <div class = "input-field col s6">
+                                                {{ form.username(size=32) }}
+                                                <label for="username1">Username</label>
+
+                                                {% for error in form.username.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+                                            
+                                        <div class ="row formrow">
+                                            <div class = "input-field col s6">
+                                                {{ form.password(size=32) }}
+                                                <label for = "password1">Password</label>
+
+                                                {% for error in form.password.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class = "row formrow">
+                                            <label for ="remember_me">
+                                                {{ form.remember_me() }}    
+                                           Remember Me</label>
+                                        </div>
+
+                                        <p>{{ form.submitlogin() }}</p>
+                                    </form>
+                                {% endblock %}
+                            </div>
+                            
+                            <div class ="ver"></div>
+
+                            <div class ="col s6">
+                                <h6>Sign Up</h6>
+                                {% block content2 %}
+                                    <form action="" method="post" class = "col s12">
+                                        {{ reform.hidden_tag() }}
+                                        <div class="row formrow">
+                                        
+                                            <div class = "input-field col s6">
+                                                {{ reform.firstname(size=32) }}
+                                                <label for="firstname">First Name</label>
+
+                                                {% for error in reform.firstname.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class = "input-field col s6">
+                                                {{ reform.lastname(size=32) }}
+                                                <label for="lastname">Last Name</label>
+
+                                                {% for error in reform.lastname.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <div class="row formrow">
+                                        
+                                            <div class = "input-field col s6">
+                                                {{ reform.username(size=32) }}
+                                                <label for="username2">User Name</label>
+
+                                                {% for error in reform.username.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class = "input-field col s6">
+                                                {{ reform.email(class_="validate",type_="email",size=32) }}
+                                                <label for = "email">E-mail</label>
+                                                {% for error in reform.email.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}                                                
+                                            </div>
+                                        </div>
+                                            
+                                        <div class ="row formrow">
+                                            <div class = "input-field col s6">
+                                                {{ reform.password(size=32) }}
+                                                <label for = "password2">Password</label>
+
+                                                {% for error in reform.password.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class ="input-field col s6">
+                                                {{ reform.passwordrepeat(size=32) }}
+                                                <label for = "passwordrepeat">Repeat Password</label>
+
+                                                {% for error in reform.passwordrepeat.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <p>{{ reform.submitsignup() }}</p>
+                                    </form>
+                                {% endblock %}
+                            </div>
+                        </div>
+                    </div>
+                <!--End of overlay-->   
+                  {% else %}
+                  <li><a href="/logout"><i class="material-icons left">account_circle</i>Log Out</a>          
+                  </li>
+                {% endif %}                 
+             </ul>
+            </div>
+          </nav>
+
+    {% block content0 %}{% endblock %}
+
+<!--Footer-->
+        <footer class="page-footer">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">You've reached the end</h5>
+                <p class="grey-text text-lighten-4">Somehow through sheer luck we managed to build this crap. #SaujasDaGuru
+                </p>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Links</h5>
+                <ul>
+                  <li><a class="grey-text text-lighten-3" href="#!">Home</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">Events</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">PLO@IIIT</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">ITWS</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+            © 2018 Copyright | All Rights Reserved
+            <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+            </div>
+          </div>
+        </footer>
+
+    </body>
+</html>
