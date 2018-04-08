@@ -15,18 +15,19 @@ def index():
 	form = LoginForm()
 	reform = SignUp()
 	
-	if form.validate_on_submit():
-		user = User.query.filter_by(username=form.username.data).first()
-		if user is None or not user.check_password(form.password.data):
-			flash('Invalid username or password')
-			return "Wrong password bitch"
+	if form.submitlogin.data == 1 and reform.submitsignup.data == 0:
+		if form.validate_on_submit():
+			user = User.query.filter_by(username=form.username.data).first()
+			if user is None or not user.check_password(form.password.data):
+				flash('Invalid username or password')
+				return "Wrong password bitch"
 
-		login_user(user, remember=form.remember_me.data)
+			login_user(user, remember=form.remember_me.data)
 
-		next_page = request.args.get('next')								#
-		if not next_page or url_parse(next_page).netloc != '':				# understand what it actually does xP
-			next_page = url_for('user',username=form.username.data)			#
-		return redirect(next_page)
+			next_page = request.args.get('next')								# causes a problem if i access acc directly using url edit and then try to login to another acc through ID, password
+			if not next_page or url_parse(next_page).netloc != '':				# understand what it actually does xP
+				next_page = url_for('user',username=form.username.data)			#
+			return redirect(next_page)
 
 	elif reform.validate_on_submit():
 		user = User(username=reform.username.data, email=reform.email.data)
@@ -42,12 +43,16 @@ def index():
 
 @app.route('/user/<username>')
 @login_required
-def user(username):
+def user(username = None):
 
-	user = User.query.filter_by(username=username).first_or_404()
-	books = [{'venue': user, 'timestamp': '23-01-1999'},{'venue': user, 'timestamp': '13-04-1999'}]
-	return render_template('loggedin.html', user=user, books=books)
+	if current_user.username == username:
+	#if username == <username> :
+		user = User.query.filter_by(username=username).first_or_404()
+		books = [{'venue': user, 'timestamp': '23-01-1999'},{'venue': user, 'timestamp': '13-04-1999'}]
+		return render_template('loggedin.html', user=user, books=books)
 
+	else:
+		return redirect(url_for('index'))
 
 @app.route('/logout')
 @login_required
