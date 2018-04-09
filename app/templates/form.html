@@ -1,0 +1,110 @@
+<!-- Chuck this html page-->
+
+{% extends "base.html" %}
+
+{% block contentform %}
+        {% block content1 %}
+                                    
+                        <form action="" method="post" class = "col s12">
+                                        {{ form.hidden_tag() }}
+                                        <div class="row formrow">
+                                        
+                                            <div class = "input-field col s6">
+                                                {{ form.username(size=32) }}
+                                                <label for="username1">Username</label>
+
+                                                {% for error in form.username.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+
+                                            </div>
+                                        </div>
+                                            
+                                        <div class ="row formrow">
+                                            <div class = "input-field col s6">
+                                                {{ form.password(size=32) }}
+                                                <label for = "password1">Password</label>
+
+                                                {% for error in form.password.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class = "row formrow">
+                                            <label for ="remember_me">
+                                                {{ form.remember_me() }}    
+                                           Remember Me</label>
+                                        </div>
+
+                                        <p>{{ form.submit() }}</p>
+                                    </form>
+                                {% endblock %}
+                            </div>
+                            
+                            <div class ="ver"></div>
+
+                            <div class ="col s6">
+                                <h6>Sign Up</h6>
+                                {% block content2 %}
+                                    <form action="" method="post" class = "col s12">
+                                        {{ reform.hidden_tag() }}
+                                        <div class="row formrow">
+                                        
+                                            <div class = "input-field col s6">
+                                                {{ reform.firstname(size=32) }}
+                                                <label for="firstname">First Name</label>
+
+                                                {% for error in reform.firstname.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class = "input-field col s6">
+                                                {{ reform.lastname(size=32) }}
+                                                <label for="lastname">Last Name</label>
+
+                                                {% for error in reform.lastname.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <div class="row formrow">
+                                        
+                                            <div class = "input-field col s6">
+                                                {{ reform.username(size=32) }}
+                                                <label for="username2">User Name</label>
+
+                                                {% for error in reform.username.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+
+                                            <div class = "input-field col s6">
+                                                {{ reform.password(size=32) }}
+                                                <label for = "password2">Password</label>
+
+                                                {% for error in reform.password.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                            
+                                        <div class ="row formrow">
+                                            <div class = "input-field col s6">
+                                                {{ reform.email(class_="validate",type_="email",size=32) }}
+                                                <label for = "email">E-mail</label>
+                                                <span class="helper-text" data-error="wrong" data-success="right">Helper text
+                                                </span>
+                                                {% for error in reform.email.errors %}
+                                                <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <p>{{ reform.submit() }}</p>
+                                    </form>
+
+        {% endblock %}
+        
+{% endblock %}
