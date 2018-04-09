@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content0 %}
+
+<h2>Booking Form (2nd stage)</h2>
+
+<div class="container">
+	<h4>Venue Type</h4>
+        <form action="" method="post">
+        	<div class="row">
+				    <div class="input-field col s12 m6">
+					    <select class="icons">
+					      <option value="" disabled selected>Choose your option</option>
+					      <option value="" data-icon="/static/images/profilepicture1.jpg">example 1</option>
+					      <option value="" data-icon="/static/images/profilepicture2.jpeg">example 2</option>
+					      <option value="" data-icon="/static/images/profilepicture3.jpg">example 3</option>
+					    </select>
+					    <label>Select Venue</label>
+					</div>
+
+					<div class="input-field col s12 m6">
+			          <textarea id="textarea1" class="materialize-textarea"></textarea>
+			          <label for="textarea1">Description</label>
+			        </div>
+			</div>
+		</form>
+</div>
+
+
+<script>
+	$(document).ready(function(){
+		 $('select').formSelect();
+		});
+</script>
+
+{% endblock %}
