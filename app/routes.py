@@ -47,13 +47,21 @@ def index():
 def user(username = None):
 
 	if current_user.username == username:
-	#if username == <username> :
-		user = User.query.filter_by(username=username).first_or_404()
-		books = [{'venue': user, 'timestamp': '23-01-1999'},{'venue': user, 'timestamp': '13-04-1999'}]
-		return render_template('loggedin.html', user=user, books=books)
+		#user = User.query.filter_by(username=username).first_or_404()
+		#books = [{'venue': user, 'timestamp': '23-01-1999'},{'venue': user, 'timestamp': '13-04-1999'}]
+		return render_template('loggedin.html')
 
 	else:
 		return redirect(url_for('index'))
+
+@app.route('/user/<username>/event2')
+@login_required
+
+def eventsecond(username=None):
+
+	return render_template('eventsecond.html')
+	
+
 
 @app.route('/logout')
 @login_required
