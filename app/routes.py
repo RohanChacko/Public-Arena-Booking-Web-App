@@ -1,15 +1,15 @@
-from flask import Flask,render_template,redirect,request,flash, url_for
-from app import app ,db
-from app.forms import LoginForm,SignUp
+from flask import Flask, render_template, redirect, request, flash, url_for
+from app import app, db
+from app.forms import LoginForm, SignUp
 from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
-@app.route('/', methods=['GET','POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
 
 	if current_user.is_authenticated:
-		return redirect(url_for('user',username=current_user.username))
+		return redirect(url_for('user', username=current_user.username))
 
 	form = LoginForm()
 	reform = SignUp()
@@ -51,12 +51,13 @@ def user(username = None):
 	else:
 		return redirect(url_for('index'))
 
-@app.route('/user/<username>/event2')
+@app.route('/user/<username>/event2', methods=['POST'])
 @login_required
 def eventsecond(username=None):
-	type = 0 #get type from request
-	start_time = 0 #get starttime from request
-	end_time = 0 #get endtime from request
+	data = request.get_json()
+	type = data['type'] #get type from request
+	start_time = data['start_time'] #get starttime from request
+	end_time = data['end_time'] #get endtime from request
 	available_venues = db.execute("SELECT venues.* FROM venues JOIN events ON venues.id == events.venue_id WHERE venues.type == :type AND (events.start_time > :endtime OR events.end_time < :start_time)", {'start_time':start_time, 'end_time':end_time}).fetchall()
 	return render_template('eventsecond.html', venues=available_venues)
 
