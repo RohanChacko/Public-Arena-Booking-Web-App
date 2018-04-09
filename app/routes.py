@@ -1,20 +1,19 @@
 from flask import Flask,render_template,redirect,request,flash, url_for
 from app import app ,db
-from app.forms import LoginForm,SignUp 
+from app.forms import LoginForm,SignUp
 from app.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
 @app.route('/', methods=['GET','POST'])
-
 def index():
-	
+
 	if current_user.is_authenticated:
 		return redirect(url_for('user',username=current_user.username))
-	
+
 	form = LoginForm()
 	reform = SignUp()
-	
+
 	if form.submitlogin.data == 1 and reform.submitsignup.data == 0:
 		if form.validate_on_submit():
 			user = User.query.filter_by(username=form.username.data).first()
@@ -37,7 +36,7 @@ def index():
 		db.session.commit()
 		flash('You are in the presence of the IT God now...')				# which part of the page does it actually flash?
 		return redirect(url_for('user',username=reform.username.data))
-	
+
 	return render_template('index.html', title='Sign Up', reform=reform, form=form)
 
 
@@ -45,23 +44,21 @@ def index():
 @app.route('/user/<username>')
 @login_required
 def user(username = None):
-
 	if current_user.username == username:
 		#user = User.query.filter_by(username=username).first_or_404()
 		#books = [{'venue': user, 'timestamp': '23-01-1999'},{'venue': user, 'timestamp': '13-04-1999'}]
 		return render_template('loggedin.html')
-
 	else:
 		return redirect(url_for('index'))
 
 @app.route('/user/<username>/event2')
 @login_required
-
 def eventsecond(username=None):
-
-	return render_template('eventsecond.html')
-	
-
+	type = 0 #get type from request
+	start_time = 0 #get starttime from request
+	end_time = 0 #get endtime from request
+	available_venues = db.execute("SELECT venues.* FROM venues JOIN events ON venues.id == events.venue_id WHERE venues.type == :type AND (events.start_time > :endtime OR events.end_time < :start_time)", {'start_time':start_time, 'end_time':end_time}).fetchall()
+	return render_template('eventsecond.html', venues=available_venues)
 
 @app.route('/logout')
 @login_required
