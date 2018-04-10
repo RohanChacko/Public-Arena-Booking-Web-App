@@ -12,10 +12,6 @@
 				  <div class="input-field col s4">
 				    <select name="select">
 				      <option value="" disabled selected>Choose Venue Type</option>
-					  <!--
-				      <option value="1">Option 1</option>
-				      <option value="2">Option 2</option>
-				      <option value="3">Option 3</option> -->
 					  {% for type in types %}
 					  	<option value="{{ type }}"">{{ type }}</option>
 					  {% endfor %}
