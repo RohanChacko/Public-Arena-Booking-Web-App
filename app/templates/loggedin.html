@@ -7,10 +7,10 @@
 
 <div class="container">
 	<h4>Venue Type</h4>
-        <form action="" method="post">
+        <form id="form" action="" method="post">
         	<div class="row">
 				  <div class="input-field col s4">
-				    <select>
+				    <select name="select">
 				      <option value="" disabled selected>Choose Venue Type</option>
 					  {% for type in types %}
 					  	<option value="{{ type }}"">{{ type }}</option>
@@ -19,7 +19,7 @@
 				  </div>
 
 				 <div class="input-field col s4">
-				  <input type="text" class="datepicker" value="Select Date" style="cursor:pointer;">
+				  <input id="date" type="text" class="datepicker" value="Select Date" style="cursor:pointer;">
 	              <label> Date Select</label>
 	        	</div>
 	        </div>
@@ -27,16 +27,19 @@
 	        <div class="row">
 
 	        	<div class="input-field col s2">
-	        	  <input type="text" class="timepicker" style="cursor:pointer;">
+	        	  <input id="start_time" type="text" class="timepicker" style="cursor:pointer;">
   	              <label>Start Time</label>
 	        	</div>
 
 
 	        	<div class="input-field col s2">
-	        	  <input type="text" class="timepicker" style="cursor:pointer;">
+	        	  <input id="end_time" type="text" class="timepicker" style="cursor:pointer;">
   	              <label>End Time</label>
 	        	</div>
 	        </div>
+                
+                             
+            <input class="btn waves-effect waves-light" type="submit" name="action" value="Submit"/>
 
 
             <!--<button class="btn waves-effect waves-light" type="submit" name="action">Submit
@@ -49,12 +52,54 @@
         </form>
 </div>
 
+<pre id="output"></pre>
+
 
       <script>
       	$(document).ready(function(){
     		$('select').formSelect();
-    		$('.datepicker').datepicker();
+    		$('.datepicker').datepicker({format:'dd/mm/yyyy'});
     		$('.timepicker').timepicker();
   			});
        </script>
+
+       <script>
+       		(function() {
+	function toJSONString( form ) {
+		var obj = {};
+		var elements = form.querySelectorAll( "select" );
+		for( var i = 0; i < elements.length; ++i ) {
+			var element = elements[i];
+			var name = element.name;
+			var value = element.value;
+
+			if( name ) {
+				obj[ name ] = value;
+			}
+		}
+
+		obj['date'] = document.getElementById('date').value;
+		obj['start_time'] = document.getElementById('start_time').value;
+		obj['end_time'] = document.getElementById('end_time').value;
+
+
+		return JSON.stringify( obj );
+	}
+
+	document.addEventListener( "DOMContentLoaded", function() {
+		var form = document.getElementById( "form" );
+		var output = document.getElementById( "output" );
+		form.addEventListener( "submit", function( e ) {
+			e.preventDefault();
+			var json = toJSONString( this );
+			output.innerHTML = json;
+			post(json);
+		}, false);
+
+	});
+
+})();
+
+       </script>
 {% endblock %}
+
