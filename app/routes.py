@@ -56,12 +56,12 @@ def user(username = None):
 @app.route('/user/<username>/event2', methods=['POST'])
 @login_required
 def eventsecond(username=None):
-	data = request.get_json()
-	type = data['type'] #get type from request
-	start_time = data['start_time'] #get starttime from request
-	end_time = data['end_time'] #get endtime from request
-	available_venues = db.execute("SELECT venues.* FROM venues JOIN events ON venues.id == events.venue_id WHERE venues.type == :type AND (events.start_time > :endtime OR events.end_time < :start_time)", {'start_time':start_time, 'end_time':end_time}).fetchall()
-	return render_template('eventsecond.html', venues=available_venues)
+	print(request.data)
+	# type = data['type'] #get type from request
+	# start_time = data['start_time'] #get starttime from request
+	# end_time = data['end_time'] #get endtime from request
+	# available_venues = db.execute("SELECT venues.* FROM venues JOIN events ON venues.id == events.venue_id WHERE venues.type == :type AND (events.start_time > :endtime OR events.end_time < :start_time)", {'start_time':start_time, 'end_time':end_time}).fetchall()
+	return render_template('eventsecond.html')#, venues=available_venues)
 
 @app.route('/logout')
 @login_required
