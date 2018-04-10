@@ -49,6 +49,17 @@ class Invites(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
     status = db.Column(db.Integer)
 
+def initialize_venues():
+    names = ['SH1', 'SH2', 'Tennis Court', "Basketball Court", "Football Ground", "Felicity Ground", "Himalaya 105", "Himalaya 205"]
+    types = ["Hall", "Hall", "Sports", "Sports", "Sports", "Outdoor", "Hall", "Hall"]
+    description = ['' for i in range(len(names))]
+    capacity = [100, 100, 4, 25, 25, 300, 300, 300]
+    for i in range(len(names)):
+        venue = Venues(name=names[i], type=types[i], capacity=capacity[i], description=description[i])
+        db.session.add(venue)
+        db.session.commit()
+
+db.create_all()
 
 @login.user_loader
 def load_user(id):

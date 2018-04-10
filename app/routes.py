@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, flash, url_for
 from app import app, db
 from app.forms import LoginForm, SignUp
-from app.models import User
+from app.models import User, Venues, Events, Invites
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
@@ -47,7 +47,9 @@ def user(username = None):
 	if current_user.username == username:
 		#user = User.query.filter_by(username=username).first_or_404()
 		#books = [{'venue': user, 'timestamp': '23-01-1999'},{'venue': user, 'timestamp': '13-04-1999'}]
-		return render_template('loggedin.html')
+		types = Venues.query.with_entities(Venues.type).distinct().all()
+		types_list = [i[0] for i in types]
+		return render_template('loggedin.html', types=types_list)
 	else:
 		return redirect(url_for('index'))
 

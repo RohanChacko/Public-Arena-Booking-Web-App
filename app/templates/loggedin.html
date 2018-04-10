@@ -2,7 +2,7 @@
 {% extends "base.html" %}
 
 {% block content0 %}
-	
+
 	<h2>Booking Form (1st stage)</h2>
 
 <div class="container">
@@ -12,9 +12,13 @@
 				  <div class="input-field col s4">
 				    <select name="select">
 				      <option value="" disabled selected>Choose Venue Type</option>
+					  <!--
 				      <option value="1">Option 1</option>
 				      <option value="2">Option 2</option>
-				      <option value="3">Option 3</option>
+				      <option value="3">Option 3</option> -->
+					  {% for type in types %}
+					  	<option value="{{ type }}"">{{ type }}</option>
+					  {% endfor %}
 				    </select>
 				  </div>
 
@@ -40,10 +44,14 @@
                 
                              
             <input class="btn waves-effect waves-light" type="submit" name="action" value="Submit"/>
-  		
 
-  			<!--<a href="/user/{{current_user.username}}/event2" class="btn waves-effect waves-light">Submit
-   				<i class="material-icons right">send</i>-->
+
+            <!--<button class="btn waves-effect waves-light" type="submit" name="action">Submit
+   				<i class="material-icons right">send</i>
+  			</button>-->
+
+  			<a href="/user/{{current_user.username}}/event2" class="btn waves-effect waves-light">Submit
+   				<i class="material-icons right">send</i>
    			</a>
         </form>
 </div>
@@ -97,4 +105,5 @@
 })();
 
        </script>
+{% endblock %}
 {% endblock %}
