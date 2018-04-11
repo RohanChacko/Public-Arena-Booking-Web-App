@@ -65,10 +65,9 @@ def eventsecond(username=None):
 	print(type, date, start_time, end_time)
 	start = int(time.mktime(time.strptime(date + ' ' + start_time, "%d/%m/%Y %H:%M")))
 	end = int(time.mktime(time.strptime(date + ' ' + end_time, "%d/%m/%Y %H:%M")))
-	available_venues = db.engine.execute("SELECT venues.id FROM venues LEFT JOIN events ON venues.id=events.venue_id WHERE venues.type == :type", {'end_time':end, 'type':type}).fetchall()
-	# available_venues = Venues.query.join(Events, Venues.id==Events.venue_id).filter(and_(Venues.type == type)).with_entities(Venues.id, Venues.name, Venues.capacity, Venues.type).distinct().all()
-	print(available_venues)
-	return render_template('eventsecond.html')#, venues=available_venues)
+	available_venues = db.engine.execute("SELECT * FROM venues WHERE id NOT IN (SELECT venue_id FROM events WHERE start_time >= :start_time AND end_time <= :end_time) AND type == :type", {'start_time':start, 'end_time':end, 'type':type}).fetchall()
+	#print(available_venues)
+	return render_template('eventsecond.html', venues=available_venues)
 
 @app.route('/logout')
 @login_required
