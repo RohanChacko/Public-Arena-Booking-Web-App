@@ -11,9 +11,9 @@
 				    <div class="input-field col s12 m6">
 					    <select class="icons">
 					      <option value="" disabled selected>Choose your option</option>
-					      <option value="" data-icon="/static/images/profilepicture1.jpg">example 1</option>
-					      <option value="" data-icon="/static/images/profilepicture2.jpeg">example 2</option>
-					      <option value="" data-icon="/static/images/profilepicture3.jpg">example 3</option>
+					      {% for venue in venues %}
+						  	<option value="{{ venue.id }}">{{ venue.name }}</option>
+						  {% endfor %}
 					    </select>
 					    <label>Select Venue</label>
 					</div>
