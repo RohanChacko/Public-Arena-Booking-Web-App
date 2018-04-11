@@ -60,7 +60,6 @@ def initialize_venues():
         db.session.commit()
 
 db.create_all()
-initialize_venues()
 
 @login.user_loader
 def load_user(id):
