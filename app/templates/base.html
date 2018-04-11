@@ -1,14 +1,15 @@
 <!--DOCTYPE HTML-->
 
 <html lang="en">
-    
+
     <head>
         <title>::Venue Booking::</title>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/materialize.min.css') }}" media="screen,projection"/>
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
-        <script type = "text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>   
+        <script type = "text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>   
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
@@ -20,13 +21,13 @@
             <div class="nav-wrapper">
               <a href="#" class="flow-text brand-logo center" style="font-weight: 100;font-size: 2rem;">IIIT Hyderabad</a>
               <ul class="left hide-on-med-and-down">
-                             
+
                 {% if current_user.is_anonymous %}
                     <li class="active"><a href="#">Home</a></li>
                 {% else %}
                     <li class="active"><a href="{{ url_for('user', username=current_user.username) }}">Dashboard</a></li>
                 {% endif %}
-                
+
                     <li><a href="#">Events</a></li>
               </ul>
 
@@ -38,7 +39,7 @@
 
                     <div id="Log" class="overlay">
                       <a href="javascript:void(0)" class="closebtn" onclick="exitoverlay()">&times;</a>
-                      
+
 
                         <div class="overlay-content row">
                             <div class = "col s6">
@@ -47,7 +48,7 @@
                                 <form action="" method="post" class = "col s12">
                                         {{ form.hidden_tag() }}
                                         <div class="row formrow">
-                                        
+
                                             <div class = "input-field col s6">
                                                 {{ form.username(size=32) }}
                                                 <label for="username1">Username</label>
@@ -58,7 +59,7 @@
 
                                             </div>
                                         </div>
-                                            
+
                                         <div class ="row formrow">
                                             <div class = "input-field col s6">
                                                 {{ form.password(size=32) }}
@@ -71,7 +72,7 @@
                                         </div>
                                         <div class = "row formrow">
                                             <label for ="remember_me">
-                                                {{ form.remember_me() }}    
+                                                {{ form.remember_me() }}
                                            Remember Me</label>
                                         </div>
 
@@ -79,7 +80,7 @@
                                     </form>
                                 {% endblock %}
                             </div>
-                            
+
                             <div class ="ver"></div>
 
                             <div class ="col s6">
@@ -88,7 +89,7 @@
                                     <form action="" method="post" class = "col s12">
                                         {{ reform.hidden_tag() }}
                                         <div class="row formrow">
-                                        
+
                                             <div class = "input-field col s6">
                                                 {{ reform.firstname(size=32) }}
                                                 <label for="firstname">First Name</label>
@@ -109,7 +110,7 @@
                                         </div>
 
                                         <div class="row formrow">
-                                        
+
                                             <div class = "input-field col s6">
                                                 {{ reform.username(size=32) }}
                                                 <label for="username2">User Name</label>
@@ -124,10 +125,10 @@
                                                 <label for = "email">E-mail</label>
                                                 {% for error in reform.email.errors %}
                                                 <span style="color: red;">[{{ error }}]</span>
-                                                {% endfor %}                                                
+                                                {% endfor %}
                                             </div>
                                         </div>
-                                            
+
                                         <div class ="row formrow">
                                             <div class = "input-field col s6">
                                                 {{ reform.password(size=32) }}
@@ -154,11 +155,11 @@
                             </div>
                         </div>
                     </div>
-                <!--End of overlay-->   
+                <!--End of overlay-->
                   {% else %}
-                  <li><a href="/logout"><i class="material-icons left">account_circle</i>Log Out</a>          
+                  <li><a href="/logout"><i class="material-icons left">account_circle</i>Log Out</a>
                   </li>
-                {% endif %}                 
+                {% endif %}
              </ul>
             </div>
           </nav>

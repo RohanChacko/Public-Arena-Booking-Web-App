@@ -7,19 +7,19 @@
 
 <div class="container">
 	<h4>Venue Type</h4>
-        <form id="form" action="" method="post">
+        <form id="form" action="{{ url_for('eventsecond', username=current_user.username) }}" method="post">
         	<div class="row">
 				  <div class="input-field col s4">
 				    <select name="select">
 				      <option value="" disabled selected>Choose Venue Type</option>
 					  {% for type in types %}
-					  	<option value="{{ type }}"">{{ type }}</option>
+					  	<option value="{{ type }}">{{ type }}</option>
 					  {% endfor %}
 				    </select>
 				  </div>
 
 				 <div class="input-field col s4">
-				  <input id="date" type="text" class="datepicker" value="Select Date" style="cursor:pointer;">
+				  <input name="date" id="date" type="text" class="datepicker" value="Select Date" style="cursor:pointer;">
 	              <label> Date Select</label>
 	        	</div>
 	        </div>
@@ -27,43 +27,41 @@
 	        <div class="row">
 
 	        	<div class="input-field col s2">
-	        	  <input id="start_time" type="text" class="timepicker" style="cursor:pointer;">
+	        	  <input name="start_time" id="start_time" type="text" class="timepicker" style="cursor:pointer;">
   	              <label>Start Time</label>
 	        	</div>
 
 
 	        	<div class="input-field col s2">
-	        	  <input id="end_time" type="text" class="timepicker" style="cursor:pointer;">
+	        	  <input name="end_time" id="end_time" type="text" class="timepicker" style="cursor:pointer;">
   	              <label>End Time</label>
 	        	</div>
 	        </div>
-                
-                             
-            <input class="btn waves-effect waves-light" type="submit" name="action" value="Submit"/>
 
 
-            <!--<button class="btn waves-effect waves-light" type="submit" name="action">Submit
+            <!--<input class="btn waves-effect waves-light" type="submit" name="action" value="Submit">-->
+
+
+            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
    				<i class="material-icons right">send</i>
-  			</button>-->
+  			</button>
 
-  			<a href="/user/{{current_user.username}}/event2" class="btn waves-effect waves-light">Submit
+  			<!--<a href="/user/{{current_user.username}}/event2" class="btn waves-effect waves-light">Submit
    				<i class="material-icons right">send</i>
-   			</a>
+   			</a>-->
         </form>
 </div>
 
 <pre id="output"></pre>
-
-
       <script>
       	$(document).ready(function(){
     		$('select').formSelect();
     		$('.datepicker').datepicker({format:'dd/mm/yyyy'});
     		$('.timepicker').timepicker();
-  			});
+		});
        </script>
 
-       <script>
+       <!-- <script>
        		(function() {
 	function toJSONString( form ) {
 		var obj = {};
@@ -100,6 +98,5 @@
 
 })();
 
-       </script>
+       </script> -->
 {% endblock %}
-

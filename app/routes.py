@@ -4,6 +4,7 @@ from app.forms import LoginForm, SignUp
 from app.models import User, Venues, Events, Invites
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
+import time
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -56,11 +57,15 @@ def user(username = None):
 @app.route('/user/<username>/event2', methods=['POST'])
 @login_required
 def eventsecond(username=None):
-	print(request.data)
-	# type = data['type'] #get type from request
-	# start_time = data['start_time'] #get starttime from request
-	# end_time = data['end_time'] #get endtime from request
-	# available_venues = db.execute("SELECT venues.* FROM venues JOIN events ON venues.id == events.venue_id WHERE venues.type == :type AND (events.start_time > :endtime OR events.end_time < :start_time)", {'start_time':start_time, 'end_time':end_time}).fetchall()
+	#data = request.form
+	print(request.form)
+	type = request.form['select'] #get type from request
+	date = request.form['date'].split('/')
+	start_time = request.form['start_time'] #get starttime from request
+	end_time = request.form['end_time'] #get endtime from request
+	#time.struct_time(tm_year=int(date[2]), tm_mon=int(date[1]), tm_mday=int(date[0]), tm_hour=10, tm_min=19,tm_sec=54, tm_wday=6, tm_yday=255, tm_isdst=0)
+	# available_venues = Venues.query.join(Events, Venues.id==Events.venue_id).filter(Events.end_time < start_time and Events.start_time > end_time and Venue.type == type).with_entities(Venues.id, Venues.name, Venues.capacity, Venues.type).distinct().all()
+	# print(available_venues)
 	return render_template('eventsecond.html')#, venues=available_venues)
 
 @app.route('/logout')
