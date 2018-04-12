@@ -69,6 +69,12 @@ def eventsecond(username=None):
 	#print(available_venues)
 	return render_template('eventsecond.html', venues=available_venues)
 
+@app.route('/user/<username>/confirm.html')
+@login_required
+def confirm(username=None):
+
+	return render_template('confirm.html')
+
 @app.route('/logout')
 @login_required
 def logout():
