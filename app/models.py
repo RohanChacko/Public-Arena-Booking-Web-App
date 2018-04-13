@@ -1,6 +1,6 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from app import db,login
+from app import db, login
 from flask_login import UserMixin
 
 
@@ -59,7 +59,9 @@ def initialize_venues():
         db.session.add(venue)
         db.session.commit()
 
+Venues.query.delete()
 db.create_all()
+initialize_venues()
 
 @login.user_loader
 def load_user(id):
