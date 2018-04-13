@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, flash, url_for
+from flask import Flask, render_template, redirect, request, flash, url_for, session
 from app import app, db
 from app.forms import LoginForm, SignUp
 from app.models import User, Venues, Events, Invites
@@ -59,21 +59,32 @@ def user(username = None):
 @login_required
 def eventsecond(username=None):
 	type = request.form['select']
+	session['type'] = type
 	date = request.form['date']
 	start_time = request.form['start_time']
 	end_time = request.form['end_time']
-	print(type, date, start_time, end_time)
+	#print(type, date, start_time, end_time)
 	start = int(time.mktime(time.strptime(date + ' ' + start_time, "%d/%m/%Y %H:%M")))
+	session['start'] = start
 	end = int(time.mktime(time.strptime(date + ' ' + end_time, "%d/%m/%Y %H:%M")))
-	available_venues = db.engine.execute("SELECT * FROM venues WHERE id NOT IN (SELECT venue_id FROM events WHERE start_time >= :start_time AND end_time <= :end_time) AND type == :type", {'start_time':start, 'end_time':end, 'type':type}).fetchall()
-	#print(available_venues)
+	session['end'] = end
+	available_venues = db.engine.execute("", {'start_time':start, 'end_time':end, 'type':type}).fetchall()
+	print(available_venues)
 	return render_template('eventsecond.html', venues=available_venues)
 
-@app.route('/user/<username>/confirm.html')
+@app.route('/user/<username>/confirm.html', methods=['POST'])
 @login_required
 def confirm(username=None):
-
-	return render_template('confirm.html')
+	venue = request.form['venue']
+	db.engine.execute("INSERT INTO events (name, description, venue_id, creator_id, start_time, end_time, type) VALUES (:name, :description, :venue_id, :creator_id, :start_time, :end_time, :type)", {'name':'', 'description':'', 'venue_id':venue, 'creator_id':0, 'start_time':session['start'], 'end_time':session['end'], 'type':0})
+	venue_details = db.engine.execute("SELECT * FROM venues WHERE id==:id", {'id':venue}).fetchall()
+	db.session.commit()
+	print(db.engine.execute("SELECT * FROM events").fetchall())
+	date = time.strftime("%d/%m/%Y", time.gmtime(session['start']))
+	start = time.strftime("%H:%M", time.gmtime(session['start']))
+	end = time.strftime("%H:%M", time.gmtime(session['end']))
+	event = {'date': date, 'start': start, 'end': end}
+	return render_template('confirm.html', event=event, venue=venue_details[0])
 
 @app.route('/logout')
 @login_required
