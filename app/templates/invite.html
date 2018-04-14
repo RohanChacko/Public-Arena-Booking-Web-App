@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content0 %}
+<!--for autocomplete with chip
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+<style>
+.chip{display:inline-block;height:32px;font-size:13px;font-weight:500;color:rgba(0,0,0,0.6);line-height:32px;padding:0 12px;border-radius:16px;background-color:#e4e4e4;margin-bottom:5px;margin-right:5px}
+.chip img{float:left;margin:0 8px 0 -12px;height:32px;width:32px;border-radius:50%}
+.chip .close{cursor:pointer;float:right;font-size:16px;line-height:32px;padding-left:8px}
+.chips{border:none;border-bottom:1px solid #9e9e9e;box-shadow:none;margin:0 0 20px 0;min-height:45px;outline:none;transition:all .3s};
+.chips.focus{border-bottom:1px solid #26a69a;box-shadow:0 1px 0 0 #26a69a};
+.chips:hover{cursor:text}
+.chips .chip.selected{background-color:#26a69a;color:#fff};
+.chips .input{background:none;border:0;color:rgba(0,0,0,0.6);display:inline-block;font-size:1rem;height:3rem;line-height:32px;outline:0;margin:0;padding:0 !important;width:120px !important};
+.chips .input:focus{border:0 !important;box-shadow:none !important};
+.prefix ~ .chips{margin-left:3rem;width:92%;width:calc(100% - 3rem)};
+.chips:empty ~ label{font-size:0.8rem;-webkit-transform:translateY(-140%);transform:translateY(-140%)};
+.input-field .prefix ~ input,.input-field .prefix ~ textarea,.input-field .prefix ~ label,.input-field .prefix ~ .validate ~ label,.input-field .prefix ~ .autocomplete-content{margin-left:3rem;width:92%;width:calc(100% - 3rem)}.input-field .prefix ~ label{margin-left:3rem}
+</style>-->
+
+<div class = "container">
+      <div class="row">
+        <h5>Invited peeps</h5>
+
+        <ul>
+          {% for invite in invite %}
+          <li>{{ invite.invitee }}</li>
+        </ul>
+
+      </div>
+</div>
+
+
+
+    <form class="col s12" action="{{ url_for('invite', username=current_user.username) }}" method="post">
+      <div class="row">
+        <div class="input-field col s12">
+          <textarea id="textarea1" class="materialize-textarea"></textarea>
+          <label for="textarea1">Textarea</label>
+        </div>
+      </div>
+
+      <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+          <i class="material-icons right">send</i>
+      </button>
+
+    </form>
+
+
+
+
+
+<!--<div class = "container">
+  <div class="row">
+  <div class="chips chips-autocomplete"></div>
+  </div>
+</div>
+
+
+<script>
+$(document).ready(function(){
+$('.chips').chips();
+$('.chips-autocomplete').chips({
+  autocompleteOptions: {
+    data: {
+      'Apple': null,
+      'Microsoft': null,
+      'Google': null,
+      "Saujas":null,
+      "Gokul":null,
+      "Jainam":null,
+      "Baba":null,
+      "Rahul":null,
+      "Rohan":null,
+      "Ajay":null
+    },
+    limit: 1,
+    minLength: 1
+  }
+});
+var chip = {
+   tag: 'chip content',
+   image: '', //optional
+ };
+});
+
+</script>-->
+
+<!--Autocomplete feature with chip functionality
+<div class="autocomplete chips chips-autocomplete"></div>
+
+<script>
+window.onload=function(){
+
+var my_data = {
+  "0":"Apple",
+  "1":"Microsoft",
+  "2":"Google"
+}
+var myConvertedData = {};
+$.each(my_data, function(index, value) {
+  myConvertedData[value] = null;
+});
+$('.chips-autocomplete').material_chip({
+  autocompleteData: myConvertedData
+});
+
+}
+
+</script>-->
+
+{% endblock %}

@@ -7489,6 +7489,7 @@ $jscomp.polyfill = function (e, r, p, m) {
     placeholder: '',
     secondaryPlaceholder: '',
     autocompleteOptions: {},
+    autocompleteOnly: false,
     limit: Infinity,
     onChipAdd: null,
     onChipSelect: null,
@@ -7691,9 +7692,11 @@ $jscomp.polyfill = function (e, r, p, m) {
           }
 
           e.preventDefault();
-          this.addChip({
-            tag: this.$input[0].value
-          });
+          if (!this.hasAutocomplete || (this.hasAutocomplete && !this.options.autocompleteOnly) ) {
+                 this.addChip({
+                     tag: this.$input[0].value
+                  });
+                }
           this.$input[0].value = '';
 
           // delete or left

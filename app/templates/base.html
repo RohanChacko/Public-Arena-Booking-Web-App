@@ -9,7 +9,7 @@
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
         <script type = "text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>   
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
@@ -28,7 +28,7 @@
                     <li class="active"><a href="{{ url_for('user', username=current_user.username) }}">Dashboard</a></li>
                 {% endif %}
 
-                    <li><a href="#">Events</a></li>
+                    <li><a href="{{ url_for('events', username=current_user.username) }}">Events</a></li>
               </ul>
 
               <ul class="right hide-on-med-and-down">

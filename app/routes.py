@@ -72,7 +72,7 @@ def eventsecond(username=None):
 	#print(available_venues)
 	return render_template('eventsecond.html', venues=available_venues)
 
-@app.route('/user/<username>/confirm.html', methods=['POST'])
+@app.route('/user/<username>/confirm', methods=['POST'])
 @login_required
 def confirm(username=None):
 	venue = request.form['venue']
@@ -86,6 +86,18 @@ def confirm(username=None):
 	event = {'date': date, 'start': start, 'end': end}
 	print(event, venue_details)
 	return render_template('confirm.html', event=event, venue=venue_details[0])
+
+@app.route('/user/<username>/events',methods=['GET'])
+@login_required
+def events(username=None):
+	return render_template('events.html')
+
+
+@app.route('/user/<username>/invite',methods=['GET','POST'])
+@login_required
+def invite(username=None):
+
+	return render_template('invite.html')
 
 @app.route('/logout')
 @login_required

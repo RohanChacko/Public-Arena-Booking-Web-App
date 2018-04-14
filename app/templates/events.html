@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content0 %}
+
+<div class="container">
+  <div class ="row">
+
+    <div class="col s12 m6">
+      <div class="card hoverable blue-grey darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">Event Name</span>
+          <p>Event type: Venue type: Start time: End time:</p>
+        </div>
+        <div class="card-action">
+            <a href="{{ url_for('invite', username=current_user.username) }}">Invite People</a>
+        </div>
+      </div>
+    </div>
+</div>
+</div>
+
+{% endblock%}
