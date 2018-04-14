@@ -69,7 +69,7 @@ def eventsecond(username=None):
 	end = int(time.mktime(time.strptime(date + ' ' + end_time, "%d/%m/%Y %H:%M")))
 	session['end'] = end
 	available_venues = db.engine.execute("SELECT * FROM venues WHERE id NOT IN (SELECT venue_id FROM events WHERE (start_time <= :end_time AND end_time >= :start_time)) AND type == :type", {'start_time':start, 'end_time':end, 'type':type}).fetchall()
-	print(available_venues)
+	#print(available_venues)
 	return render_template('eventsecond.html', venues=available_venues)
 
 @app.route('/user/<username>/confirm.html', methods=['POST'])
@@ -79,11 +79,12 @@ def confirm(username=None):
 	db.engine.execute("INSERT INTO events (name, description, venue_id, creator_id, start_time, end_time, type) VALUES (:name, :description, :venue_id, :creator_id, :start_time, :end_time, :type)", {'name':'', 'description':'', 'venue_id':venue, 'creator_id':0, 'start_time':session['start'], 'end_time':session['end'], 'type':0})
 	venue_details = db.engine.execute("SELECT * FROM venues WHERE id==:id", {'id':venue}).fetchall()
 	db.session.commit()
-	print(db.engine.execute("SELECT * FROM events").fetchall())
+	#print(db.engine.execute("SELECT * FROM events").fetchall())
 	date = time.strftime("%d/%m/%Y", time.gmtime(session['start']))
 	start = time.strftime("%H:%M", time.gmtime(session['start']))
 	end = time.strftime("%H:%M", time.gmtime(session['end']))
 	event = {'date': date, 'start': start, 'end': end}
+	print(event, venue_details)
 	return render_template('confirm.html', event=event, venue=venue_details[0])
 
 @app.route('/logout')
@@ -95,5 +96,3 @@ def logout():
 if __name__ == '__main__':
 	app.debug()
 	app.run (debug = True)
-
-SELECT * FROM venues WHERE id NOT IN (SELECT venue_id FROM events WHERE (start_time <= :end_time AND end_time >= :start_time)) AND type == :type
