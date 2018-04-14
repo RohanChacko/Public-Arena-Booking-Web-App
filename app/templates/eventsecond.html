@@ -6,7 +6,7 @@
 
 <div class="container">
 	<h4>Venue Type</h4>
-        <form action="" method="post">
+        <form action="{{ url_for('confirm', username=current_user.username) }}" method="post">
         	<div class="row">
 				    <div class="input-field col s12 m6">
 					    <select class="icons">
