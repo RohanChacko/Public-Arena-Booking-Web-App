@@ -25,7 +25,8 @@
 
         <ul>
           {% for invite in invite %}
-          <li>{{ invite.invitee }}</li>
+          <li>{{ invite.username }}</li>
+          {% endfor %}
         </ul>
 
       </div>
@@ -33,10 +34,10 @@
 
 
 
-    <form class="col s12" action="{{ url_for('invite', username=current_user.username) }}" method="post">
+    <form class="col s12" action="{{ url_for('invite', username=current_user.username, event_id=event) }}" method="post">
       <div class="row">
         <div class="input-field col s12">
-          <textarea id="textarea1" class="materialize-textarea"></textarea>
+          <textarea name="invitee" id="textarea1" class="materialize-textarea"></textarea>
           <label for="textarea1">Textarea</label>
         </div>
       </div>
