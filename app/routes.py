@@ -90,14 +90,31 @@ def confirm(username=None):
 @app.route('/user/<username>/events',methods=['GET'])
 @login_required
 def events(username=None):
-	return render_template('events.html')
+	id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username':username}).fetchall()[0][0]
+	#print(id)
+	public_events = db.engine.execute("SELECT * FROM events WHERE type == 0").fetchall()
+	private_events = db.engine.execute("SELECT * FROM events WHERE id IN (SELECT event_id FROM invites WHERE (invitee_id == :id OR inviter_id == :id))", {'id':id}).fetchall()
+	return render_template('events.html', events_list=public_events+private_events)
 
 
-@app.route('/user/<username>/invite',methods=['GET','POST'])
+@app.route('/user/<username>/invite/<int:event_id>', methods=['GET','POST'])
 @login_required
-def invite(username=None):
-
-	return render_template('invite.html')
+def invite(username=None, event_id=None):
+	print(db.engine.execute("SELECT * FROM user").fetchall())
+	if request.method == 'GET':
+		invite = db.engine.execute("SELECT * FROM invites WHERE event_id == :event_id", {'event_id': event_id})
+		return render_template('invite.html', invite=invite, event=event_id)
+	elif request.method == 'POST':
+		invitee = request.form['invitee']
+		inviter_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username':username}).fetchall()[0][0]
+		invitee_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username':invitee}).fetchall()[0][0]
+		if inviter_id == invitee_id:
+			invite = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id)", {'event_id': event_id}).fetchall()
+			return render_template('invite.html', invite=invite, event=event_id)
+		db.engine.execute("INSERT INTO invites (inviter_id, invitee_id, event_id, status) VALUES (:inviter_id, :invitee_id, :event_id, 0)", {'inviter_id': inviter_id, 'invitee_id': invitee_id, 'event_id': event_id})
+		db.session.commit()
+		invite = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id)", {'event_id': event_id}).fetchall()
+		return render_template('invite.html', invite=invite, event=event_id)
 
 @app.route('/logout')
 @login_required

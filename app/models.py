@@ -59,8 +59,10 @@ def initialize_venues():
         db.session.add(venue)
         db.session.commit()
 
-Venues.query.delete()
 db.create_all()
+Venues.query.delete()
+Events.query.delete()
+Invites.query.delete()
 initialize_venues()
 
 @login.user_loader
