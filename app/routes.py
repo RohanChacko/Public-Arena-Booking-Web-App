@@ -25,11 +25,11 @@ def index():
 
             login_user(user, remember=form.remember_me.data)
 
-            # next_page = request.args.get('next')								# causes a problem if i access acc directly using url edit and then try to login to another acc through ID, password. So changed it for now.
+            # next_page = request.args.get('next')                                # causes a problem if i access acc directly using url edit and then try to login to another acc through ID, password. So changed it for now.
             next_page = 'index'
             # understand what it actually does xP
             if not next_page or url_parse(next_page).netloc != '':
-                next_page = url_for('user', username=form.username.data)			#
+                next_page = url_for('user', username=form.username.data)            #
             return redirect(url_for(next_page))
 
     elif reform.validate_on_submit():
@@ -39,7 +39,19 @@ def index():
         db.session.commit()
         return redirect(url_for('user', username=reform.Username2.data))
     else:
-        return render_template('index.html', title='Sign Up', reform=reform, form=form)
+        public_events = db.engine.execute("SELECT * FROM events WHERE type == 0").fetchall()
+        events_list = list()
+        for event in public_events:
+            venue_name = db.engine.execute("SELECT name FROM venues WHERE id == :id", {'id': event[3]}).fetchall()[0][0]
+            try:
+                creator = db.engine.execute("SELECT username FROM user WHERE id == :id", {'id': event[4]}).fetchall()[0][0]
+            except:
+                creator = ''
+            date = time.strftime("%d/%m/%Y", time.gmtime(event[5]))
+            start = time.strftime("%H:%M", time.gmtime(event[5]))
+            end = time.strftime("%H:%M", time.gmtime(event[6]))
+            events_list.append({'name': event[1], 'description': event[2], 'date': date, 'start_time': start, 'end_time': end, 'venue': venue_name, 'creator': creator})
+        return render_template('index.html', title='Sign Up', reform=reform, form=form, events=events_list)
 
 
 @app.route('/user/<username>')
@@ -78,11 +90,13 @@ def eventsecond(username=None):
 @login_required
 def confirm(username=None):
     venue = request.form['venue']
-    #name = request.form['name']
+    name = request.form['name']
+    description = request.form['description']
     #SAUJAS, WE DONT HAVE DESCRIPTION
     #type = request.form['eventype']
+    user_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username': username}).fetchall()[0][0]
     db.engine.execute("INSERT INTO events (name, description, venue_id, creator_id, start_time, end_time, type) VALUES (:name, :description, :venue_id, :creator_id, :start_time, :end_time, :type)", {
-                      'name': '', 'description': '', 'venue_id': venue, 'creator_id': 0, 'start_time': session['start'], 'end_time': session['end'], 'type': 0})
+                      'name': name, 'description': description, 'venue_id': venue, 'creator_id': user_id, 'start_time': session['start'], 'end_time': session['end'], 'type': 0})
     venue_details = db.engine.execute(
         "SELECT * FROM venues WHERE id==:id", {'id': venue}).fetchall()
     db.session.commit()
@@ -91,7 +105,7 @@ def confirm(username=None):
     start = time.strftime("%H:%M", time.gmtime(session['start']))
     end = time.strftime("%H:%M", time.gmtime(session['end']))
     event = {'date': date, 'start': start, 'end': end}
-    print(event, venue_details)
+    #print(event, venue_details)
     return render_template('confirm.html', event=event, venue=venue_details[0])
 
 
@@ -105,13 +119,24 @@ def events(username=None):
         "SELECT * FROM events WHERE type == 0").fetchall()
     private_events = db.engine.execute(
         "SELECT * FROM events WHERE id IN (SELECT event_id FROM invites WHERE (invitee_id == :id OR inviter_id == :id))", {'id': id}).fetchall()
-    return render_template('events.html', events_list=public_events + private_events)
+    events_list = list()
+    for event in public_events+private_events:
+        venue_name = db.engine.execute("SELECT name FROM venues WHERE id == :id", {'id': event[3]}).fetchall()[0][0]
+        try:
+            creator = db.engine.execute("SELECT username FROM user WHERE id == :id", {'id': event[4]}).fetchall()[0][0]
+        except:
+            creator = ''
+        date = time.strftime("%d/%m/%Y", time.gmtime(event[5]))
+        start = time.strftime("%H:%M", time.gmtime(event[5]))
+        end = time.strftime("%H:%M", time.gmtime(event[6]))
+        events_list.append({'id': event[0], 'name': event[1], 'description': event[2], 'date': date, 'start_time': start, 'end_time': end, 'venue': venue_name, 'creator': creator})
+    return render_template('events.html', events_list=events_list)
 
 
 @app.route('/user/<username>/invite/<int:event_id>', methods=['GET', 'POST'])
 @login_required
 def invite(username=None, event_id=None):
-    print(db.engine.execute("SELECT * FROM user").fetchall())
+    #print(db.engine.execute("SELECT * FROM user").fetchall())
     if request.method == 'GET':
         invite = db.engine.execute(
             "SELECT * FROM invites WHERE event_id == :event_id", {'event_id': event_id})

@@ -68,10 +68,10 @@ def initialize_venues():
 
 
 db.create_all()
-Venues.query.delete()
-Events.query.delete()
-Invites.query.delete()
-initialize_venues()
+# Venues.query.delete()
+# Events.query.delete()
+# Invites.query.delete()
+# initialize_venues()
 
 
 @login.user_loader

@@ -13,19 +13,20 @@
       <div class="row">
     <div class="col s4">
 
+{% for event in events %}
       <div class="card hoverable blue-grey darken-1">
         <div class="card-content cyan-text text-accent-3">
-          <span class="card-title center">Event Name<!--event.name--></span>
-
+          <span class="card-title center">{{ event.name }}</span>
           <ul>
-            <li>Event Date:<!--event.date--></li><br><br>
-            <li>Event Start Time:<!--event.start_time--></li><br><br>
-            <li>Event End Time:<!--event.end_time--></li><br><br>
-            <li>Event Venue:<!--event.venue--></li><br><br>
-            <li>Event Creator:<!--inviter--></li>
+            <li>Event Date: {{ event.date }}</li><br><br>
+            <li>Event Start Time: {{ event.start_time }}</li><br><br>
+            <li>Event End Time: {{ event.end_time }}</li><br><br>
+            <li>Event Venue: {{ event.venue }}</li><br><br>
+            <li>Event Creator: {{ event.creator }}</li>
           </ul>
         </div>
       </div>
+{% endfor %}
     </div>
   </div>
 </div>
