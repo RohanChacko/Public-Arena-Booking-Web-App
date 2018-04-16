@@ -21,6 +21,7 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
+
 class Events(db.Model):
     __tablename__ = 'events'
     id = db.Column(db.Integer, primary_key=True)
@@ -32,6 +33,7 @@ class Events(db.Model):
     end_time = db.Column(db.Integer)
     type = db.Column(db.Integer)
 
+
 class Venues(db.Model):
     __tablename__ = 'venues'
     id = db.Column(db.Integer, primary_key=True)
@@ -41,6 +43,7 @@ class Venues(db.Model):
     type = db.Column(db.String(64))
     events = db.relationship('Events', backref='venues')
 
+
 class Invites(db.Model):
     __tablename__ = 'invites'
     id = db.Column(db.Integer, primary_key=True)
@@ -49,21 +52,27 @@ class Invites(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
     status = db.Column(db.Integer)
 
+
 def initialize_venues():
-    names = ['SH1', 'SH2', 'Tennis Court', "Basketball Court", "Football Ground", "Felicity Ground", "Himalaya 105", "Himalaya 205"]
-    types = ["Hall", "Hall", "Sports", "Sports", "Sports", "Outdoor", "Hall", "Hall"]
+    names = ['SH1', 'SH2', 'Tennis Court', "Basketball Court",
+             "Football Ground", "Felicity Ground", "Himalaya 105", "Himalaya 205"]
+    types = ["Hall", "Hall", "Sports", "Sports",
+             "Sports", "Outdoor", "Hall", "Hall"]
     description = ['' for i in range(len(names))]
     capacity = [100, 100, 4, 25, 25, 300, 300, 300]
     for i in range(len(names)):
-        venue = Venues(name=names[i], type=types[i], capacity=capacity[i], description=description[i])
+        venue = Venues(name=names[i], type=types[i],
+                       capacity=capacity[i], description=description[i])
         db.session.add(venue)
         db.session.commit()
+
 
 db.create_all()
 Venues.query.delete()
 Events.query.delete()
 Invites.query.delete()
 initialize_venues()
+
 
 @login.user_loader
 def load_user(id):

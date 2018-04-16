@@ -1,6 +1,4 @@
-{% extends "base.html" %}
-
-{% block content0 %}
+{% extends "base.html" %} {% block content0 %}
 <!--for autocomplete with chip
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
@@ -19,34 +17,34 @@
 .input-field .prefix ~ input,.input-field .prefix ~ textarea,.input-field .prefix ~ label,.input-field .prefix ~ .validate ~ label,.input-field .prefix ~ .autocomplete-content{margin-left:3rem;width:92%;width:calc(100% - 3rem)}.input-field .prefix ~ label{margin-left:3rem}
 </style>-->
 
-<div class = "container">
-      <div class="row">
-        <h5>Invited peeps</h5>
+<div class="container">
+  <div class="row">
+    <h5>Invited peeps</h5>
 
-        <ul>
-          {% for invite in invite %}
-          <li>{{ invite.username }}</li>
-          {% endfor %}
-        </ul>
+    <ul>
+      {% for invite in invite %}
+      <li>{{ invite.username }}</li>
+      {% endfor %}
+    </ul>
 
-      </div>
+  </div>
 </div>
 
 
 
-    <form class="col s12" action="{{ url_for('invite', username=current_user.username, event_id=event) }}" method="post">
-      <div class="row">
-        <div class="input-field col s12">
-          <textarea name="invitee" id="textarea1" class="materialize-textarea"></textarea>
-          <label for="textarea1">Textarea</label>
-        </div>
-      </div>
+<form class="col s12" action="{{ url_for('invite', username=current_user.username, event_id=event) }}" method="post">
+  <div class="row">
+    <div class="input-field col s12">
+      <textarea name="invitee" id="textarea1" class="materialize-textarea"></textarea>
+      <label for="textarea1">Textarea</label>
+    </div>
+  </div>
 
-      <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+  <button class="btn waves-effect waves-light" type="submit" name="action">Submit
           <i class="material-icons right">send</i>
       </button>
 
-    </form>
+</form>
 
 
 

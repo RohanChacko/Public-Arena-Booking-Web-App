@@ -1,67 +1,141 @@
+ {% extends "base.html" %} {% block content0 %}
 
-{% extends "base.html" %}
-
-{% block content0 %}
-
-	<h2>Booking Form (1st stage)</h2>
+<h2>Booking Form (1st stage)</h2>
 
 <div class="container">
-	<h4>Venue Type</h4>
-        <form id="form" action="{{ url_for('eventsecond', username=current_user.username) }}" method="post">
-        	<div class="row">
-				  <div class="input-field col s4">
-				    <select name="select">
+  <h4>Venue Type</h4>
+  <form id="form" name="form" action="{{ url_for('eventsecond', username=current_user.username) }}" method="post">
+    <div class="row">
+      <div class="input-field col s4">
+        <select name="select" id="select">
 				      <option value="" disabled selected>Choose Venue Type</option>
 					  {% for type in types %}
 					  	<option value="{{ type }}">{{ type }}</option>
 					  {% endfor %}
-				    </select>
-				  </div>
+			 </select>
 
-				 <div class="input-field col s4">
-				  <input name="date" id="date" type="text" class="datepicker" value="Select Date" style="cursor:pointer;">
-	              <label> Date Select</label>
-	        	</div>
-	        </div>
+       <label for="venuetype">Venue Type</label>
+       <span style="color: red;" id="venuerror"></span>
 
-	        <div class="row">
+      </div>
 
-	        	<div class="input-field col s2">
-	        	  <input name="start_time" id="start_time" type="text" class="timepicker" style="cursor:pointer;">
-  	              <label>Start Time</label>
-	        	</div>
+      <div class="input-field col s4">
+        <input name="date" id="date" type="text" class="datepicker" value="Select Date" style="cursor:pointer;color:black;">
+        <label> Date Select</label>
+        <span style="color: red;" id="daterror"></span>
+      </div>
 
 
-	        	<div class="input-field col s2">
-	        	  <input name="end_time" id="end_time" type="text" class="timepicker" style="cursor:pointer;">
-  	              <label>End Time</label>
-	        	</div>
-	        </div>
+    </div>
+
+    <div class="row">
+
+      <div class="input-field col s2">
+        <input name="start_time" id="start_time" type="text" class="timepicker" style="cursor:pointer;color:black;">
+        <label style="color:black;">Start Time</label>
+        <span style="color: red;" id="starterror"></span>
+      </div>
 
 
-            <!--<input class="btn waves-effect waves-light" type="submit" name="action" value="Submit">-->
+      <div class="input-field col s2">
+        <input name="end_time" id="end_time" type="text" class="timepicker" style="cursor:pointer;color:black;">
+        <label style="color:black;">End Time</label>
+        <span style="color: red;" id="enderror"></span>
+      </div>
+    </div>
 
-
-            <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+    <button class="btn waves-effect waves-light" type="submit" name="action">Submit
    				<i class="material-icons right">send</i>
   			</button>
-
-  			<!--<a href="/user/{{current_user.username}}/event2" class="btn waves-effect waves-light">Submit
-   				<i class="material-icons right">send</i>
-   			</a>-->
-        </form>
+  </form>
 </div>
 
-<pre id="output"></pre>
-      <script>
-      	$(document).ready(function(){
-    		$('select').formSelect();
-    		$('.datepicker').datepicker({format:'dd/mm/yyyy'});
-    		$('.timepicker').timepicker({twelveHour:false});
-		});
-       </script>
+<script>
+  $(document).ready(function() {
+    $('select').formSelect();
+    $('.datepicker').datepicker({
+      autoClose: true,
+      format: 'dd/mm/yyyy',
+      minDate: new Date()
+    });
+    $('.timepicker').timepicker({
+      twelveHour: false,
+      autoClose: true
+    });
+  });
+</script>
 
-       <!-- <script>
+<!--Field validator. Too cool to use WTForm Validator-->
+<script>
+$('form').submit(function () {
+
+  var f1=1;
+  var f2=1;
+  var f3=1;
+  var f4=1;
+  var value = $.trim($('#select').val());
+
+  if (value  === '') {
+      $("#venuerror").text("Invalid field value");
+      f1=1;
+  }
+  else {
+    f1=0;
+    $("#venuerror").text("");
+  }
+
+  var value = $.trim($('#date').val());
+
+    if (value  === '' || value === 'Select Date') {
+        $("#daterror").text("Invalid field value");
+        f2=1;
+    }
+    else {
+      f2=0;
+      $("#daterror").text("");
+    }
+
+  var value = $.trim($('#start_time').val());
+
+    if (value  === '') {
+      $("#starterror").text("Invalid field value");
+        f3=1;
+    }
+    else {
+      f3=0;
+      $("#starterror").text("");
+    }
+
+  var value = $.trim($('#end_time').val());
+
+    if (value  === '') {
+     $("#enderror").text("Invalid field value");
+       f4=1;
+   }
+   else{
+     f4=0;
+     $("#enderror").text("");
+   }
+
+   var a=$('#start_time').val();
+   var b=$('#end_time').val();
+
+   if(f3!=1 && f4!=1 && a>=b){
+     $("#enderror").text("Please provide a later date");
+     f4=1;
+   }
+   else {
+     f4=0;
+   }
+
+   if(f1 == 1 || f2 == 1 || f3 == 1 || f4 == 1){
+     return false;
+   }
+});
+
+</script>
+
+<!-- <script>
        		(function() {
 	function toJSONString( form ) {
 		var obj = {};

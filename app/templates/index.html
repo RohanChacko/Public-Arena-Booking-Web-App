@@ -1,89 +1,45 @@
-
-{% extends "base.html" %}
-
-{% block content0 %}
+ {% extends "base.html" %} {% block content0 %}
 <!--Main Content-->
-        <div class = "container">
-                    
-                    <div class = "row">
-                        <h3 style="text-align: center">VENUE BOOKING</h3>
-                    </div>
-                    
+<div class="container">
 
-                    <div class ="row">
-                        <div class="col s4">
-                            <div class="card hoverable">
-                                
-                                <div class="card-image waves-effect waves-block waves-light">
-                                  <img class="activator" src="static/images/profilepicture1.jpg">
-                                </div>
-                                
-                                <div class="card-content">
-                                  <span class="card-title activator grey-text text-darken-4">Saujas Vaduguru<i class="material-icons right">more_vert</i></span>
-                                  <p><a href="#">PLO @ IIIT</a></p>
-                                </div>
-                                
-                                <div class="card-reveal">
-                                  <span class="card-title grey-text text-darken-4">Saujas Vaduguru<i class="material-icons right">close</i></span>
-                                  <p>Saujas, otherwise known as vagene is a PLO award recipient and fellow of the Clay Institute.</p>
-                                </div>
-                            </div>            
-                        </div>
-
-                        <div class="col s4">
-                            <div class="card hoverable">
-                                
-                                <div class="card-image waves-effect waves-block waves-light">
-                                  <img class="activator" src="static/images/profilepicture2.jpeg">
-                                </div>
-                                
-                                <div class="card-content">
-                                  <span class="card-title activator grey-text text-darken-4">Jainam Khakhra<i class="material-icons right">more_vert</i></span>
-                                  <p><a href="#">Linear Algebra @ IIIT</a></p>
-                                </div>
-                                
-                                <div class="card-reveal">
-                                  <span class="card-title grey-text text-darken-4">Jainam Khakhra
-                                        <i class="material-icons right">close</i>
-                                  </span>
-                                  <p>Jainam, otherwise known as ITWS is pursuing a dual PHD in ITWS and Data Structures at IIIT, Hyd.</p>
-                                </div>
-                            </div>            
-                        </div>
-
-                        <div class="col s4">
-                            <div class="card hoverable">
-                                
-                                <div class="card-image waves-effect waves-block waves-light">
-                                  <img class="activator" src="static/images/profilepicture3.jpg">
-                                </div>
-                                
-                                <div class="card-content">
-                                  <span class="card-title activator grey-text text-darken-4">Ajay Shrihari<i class="material-icons right">more_vert</i></span>
-                                  <p><a href="#">Continental @ IIIT</a></p>
-                                </div>
-                                
-                                <div class="card-reveal">
-                                  <span class="card-title grey-text text-darken-4">ML Ajay<i class="material-icons right">close</i></span>
-                                  <p>Ajay, maker of things and apparently knows complete Javascript and Python.</p>
-                                </div>
-                            </div>            
-                        </div>
+  <div class="row">
+    <h3 style="text-align: center">VENUE BOOKING</h3>
+    <h5 style="text-align: center">Public Events</h3>
+  </div>
 
 
-                    </div>
+  <!--for event in events-->
+    <!--if event number%3 ==0-->
+      <div class="row">
+    <div class="col s4">
+
+      <div class="card hoverable blue-grey darken-1">
+        <div class="card-content cyan-text text-accent-3">
+          <span class="card-title center">Event Name<!--event.name--></span>
+
+          <ul>
+            <li>Event Date:<!--event.date--></li><br><br>
+            <li>Event Start Time:<!--event.start_time--></li><br><br>
+            <li>Event End Time:<!--event.end_time--></li><br><br>
+            <li>Event Venue:<!--event.venue--></li><br><br>
+            <li>Event Creator:<!--inviter--></li>
+          </ul>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!--Scripts-->
 
-        <script>
-            function openoverlay() {
-                document.getElementById("Log").style.display = "block";
-            }
+<script>
+  function openoverlay() {
+    document.getElementById("Log").style.display = "block";
+  }
 
-            function exitoverlay() {
-                document.getElementById("Log").style.display = "none";
-            }
-        </script>
+  function exitoverlay() {
+    document.getElementById("Log").style.display = "none";
+  }
+</script>
 
 {% endblock %}

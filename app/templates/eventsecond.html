@@ -1,45 +1,61 @@
-{% extends "base.html" %}
-
-{% block content0 %}
+{% extends "base.html" %} {% block content0 %}
 
 <h2>Booking Form (2nd stage)</h2>
 
 <div class="container">
-	<h4>Venue Type</h4>
-        <form action="{{ url_for('confirm', username=current_user.username) }}" method="post">
-        	<div class="row">
-				    <div class="input-field col s12 m6">
-					    <select class="icons" name="venue">
+	<h4>Venue Type & Event Type</h4>
+	<form action="{{ url_for('confirm', username=current_user.username) }}" method="post">
+		<div class="row">
+			<div class="input-field col s12 m6">
+				<select name="venue" id="select">
 					      <option value="" disabled selected>Choose your option</option>
 					      {% for venue in venues %}
 						  	<option value="{{ venue.id }}">{{ venue.name }}</option>
 						  {% endfor %}
 					    </select>
-					    <label>Select Venue</label>
-					</div>
-
-					<button class="btn waves-effect waves-light" type="submit" name="action">Submit
-		   				<i class="material-icons right">send</i>
-		  			</button>
-
-					<!--Put it in event3
-					<div class="input-field col s12 m6">
-			          <textarea id="textarea1" class="materialize-textarea"></textarea>
-			          <label for="textarea1">Description</label>
-			        </div>-->
+				<label>Select Venue</label>
+				<span style="color: red;" id="venuerror"></span>
 			</div>
-		</form>
+		</div>
+
+		<div class="row">
+			<p>
+				<label>
+			 <input name="eventype" type="radio" checked />
+			 <span style="color:black;">Public</span>
+		 </label>
+			</p>
+			<p>
+				<label>
+					 <input name="eventype" type="radio" />
+					 <span style="color:black;">Private</span>
+		 	  </label>
+			</p>
+		</div>
+
+		<button class="btn waves-effect waves-light" type="submit" name="action">Submit
+		   				<i class="material-icons right">send</i>
+		</button>
+
+	</form>
 </div>
 
-<!--<a href="/user/{{current_user.username}}/confirm.html" class="btn waves-effect waves-light">Submit
-   				<i class="material-icons right">send</i>
- </a>-->
-
+<script>
+	$(document).ready(function() {
+		$('select').formSelect();
+	});
+</script>
 
 <script>
-	$(document).ready(function(){
-		 $('select').formSelect();
-		});
+$('form').submit(function () {
+
+  var value = $.trim($('#select').val());
+
+  if (value  === '') {
+      $("#venuerror").text("Invalid field value");
+			return false;
+  }
+});
 </script>
 
 {% endblock %}
