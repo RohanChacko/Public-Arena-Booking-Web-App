@@ -48,7 +48,7 @@
                 <div class="row formrow">
 
                   <div class="input-field col s6">
-                    {{ form.username(class_="white-text",size=32) }}
+                    {{ form.username(class_="white-text",id="username1",size=32) }}
                     <label for="username1">Username</label> {% for error in form.username.errors %}
                     <span style="color: red;">[{{ error }}]</span> {% endfor %}
 
@@ -57,7 +57,7 @@
 
                 <div class="row formrow">
                   <div class="input-field col s6">
-                    {{ form.password(class_="white-text",size=32) }}
+                    {{ form.password(class_="white-text",id="password1",size=32) }}
                     <label for="password1">Password</label> {% for error in form.password.errors %}
                     <span style="color: red;">[{{ error }}]</span> {% endfor %}
                   </div>
@@ -83,13 +83,13 @@
 
                   <div class="input-field col s6">
                     {{ reform.firstname(class_="white-text",size=32) }}
-                    <label for="firstname">First Name</label> {% for error in reform.firstname.errors %}
+                    <label for="firstname">First Name<font color="red">*</font></label> {% for error in reform.firstname.errors %}
                     <span style="color: red;">[{{ error }}]</span> {% endfor %}
                   </div>
 
                   <div class="input-field col s6">
                     {{ reform.lastname(class_="white-text",size=32) }}
-                    <label for="lastname">Last Name</label> {% for error in reform.lastname.errors %}
+                    <label for="lastname">Last Name<font color="red">*</font></label> {% for error in reform.lastname.errors %}
                     <span style="color: red;">[{{ error }}]</span> {% endfor %}
                   </div>
                 </div>
@@ -98,13 +98,13 @@
 
                   <div class="input-field col s6">
                     {{ reform.Username2(class_="white-text",size=32) }}
-                    <label for="Username2">User Name</label> {% for error in reform.Username2.errors %}
+                    <label for="Username2">Username<font color="red">*</font></label> {% for error in reform.Username2.errors %}
                     <span style="color: red;">[{{ error }}]</span> {% endfor %}
                   </div>
 
                   <div class="input-field col s6">
                     {{ reform.email(class_="validate white-text",type_="email",size=32) }}
-                    <label for="email">E-mail</label> {% for error in reform.email.errors %}
+                    <label for="email">E-mail<font color="red">*</font></label> {% for error in reform.email.errors %}
                     <span style="color: red;">[{{ error }}]</span> {% endfor %}
                   </div>
                 </div>
@@ -112,13 +112,13 @@
                 <div class="row formrow">
                   <div class="input-field col s6">
                     {{ reform.Password2(class_="white-text",size=32) }}
-                    <label for="Password2">Password</label> {% for error in reform.Password2.errors %}
+                    <label for="Password2">Password<font color="red">*</font></label> {% for error in reform.Password2.errors %}
                     <span style="color: red;">[{{ error }}]</span> {% endfor %}
                   </div>
 
                   <div class="input-field col s6">
                     {{ reform.passwordrepeat(class_="white-text",size=32) }}
-                    <label for="passwordrepeat">Repeat Password</label> {% for error in reform.passwordrepeat.errors %}
+                    <label for="passwordrepeat">Repeat Password<font color="red">*</font></label> {% for error in reform.passwordrepeat.errors %}
                     <span style="color: red;">[{{ error }}]</span> {% endfor %}
                   </div>
                 </div>

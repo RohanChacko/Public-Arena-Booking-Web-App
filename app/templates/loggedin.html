@@ -14,14 +14,14 @@
 					  {% endfor %}
 			 </select>
 
-       <label for="venuetype">Venue Type</label>
+       <label for="venuetype" style="color:black;">Venue Type<font color="red">*</font></label>
        <span style="color: red;" id="venuerror"></span>
 
       </div>
 
       <div class="input-field col s4">
         <input name="date" id="date" type="text" class="datepicker" value="Select Date" style="cursor:pointer;color:black;">
-        <label> Date Select</label>
+        <label for="date" style="color:black;">Select Date<font color="red">*</font></label>
         <span style="color: red;" id="daterror"></span>
       </div>
 
@@ -32,14 +32,14 @@
 
       <div class="input-field col s2">
         <input name="start_time" id="start_time" type="text" class="timepicker" style="cursor:pointer;color:black;">
-        <label style="color:black;">Start Time</label>
+        <label for="start_time" style="color:black;">Start Time<font color="red">*</font></label>
         <span style="color: red;" id="starterror"></span>
       </div>
 
 
       <div class="input-field col s2">
         <input name="end_time" id="end_time" type="text" class="timepicker" style="cursor:pointer;color:black;">
-        <label style="color:black;">End Time</label>
+        <label for="end_time" style="color:black;">End Time<font color="red">*</font></label>
         <span style="color: red;" id="enderror"></span>
       </div>
     </div>

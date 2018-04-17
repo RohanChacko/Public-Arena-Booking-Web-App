@@ -13,7 +13,7 @@
 						  	<option value="{{ venue.id }}">{{ venue.name }}</option>
 						  {% endfor %}
 					    </select>
-				<label>Select Venue</label>
+				<label style="color: black;">Select Venue<font color="red">*</font></label>
 				<span style="color: red;" id="venuerror"></span>
 			</div>
 		</div>
@@ -35,13 +35,15 @@
 
 		<div class="row">
 			<p>
-				Enter event name: <input name="name" type="text">
+				Enter event name<font color="red">*</font>: <input name="name" type="text" id="eventname">
 			</p>
+
+			<span style="color: red;" id="eventnamerror"></span>
 		</div>
 
 		<div class="row">
 			<p>
-				Enter event description: <input name="description" type="text">
+				Enter event description(optional): <input name="description" type="text">
 			</p>
 		</div>
 
@@ -62,11 +64,32 @@
 $('form').submit(function () {
 
   var value = $.trim($('#select').val());
-
+	var f1=0;
+	var f2=0;
   if (value  === '') {
       $("#venuerror").text("Invalid field value");
-			return false;
+			f1=1;
   }
+	else {
+			$("#venuerror").text("");
+			f1=0;
+		}
+
+	 value = $.trim($('#eventname').val());
+
+	 if (value  === '') {
+       $("#eventnamerror").text("Invalid field value");
+ 			f2=1;
+   }
+ 	else {
+ 			$("#eventnamerror").text("");
+ 			f2=0;
+ 		}
+
+	if(f1==1 || f2 == 1)
+	{
+		return false;
+	}
 });
 </script>
 
