@@ -35,7 +35,8 @@
 
 		<div class="row">
 			<p>
-				Enter event name<font color="red">*</font>: <input name="name" type="text" id="eventname">
+				Enter event name
+				<font color="red">*</font>: <input name="name" type="text" id="eventname">
 			</p>
 
 			<span style="color: red;" id="eventnamerror"></span>
@@ -44,6 +45,13 @@
 		<div class="row">
 			<p>
 				Enter event description(optional): <input name="description" type="text">
+			</p>
+		</div>
+
+		<div class="row">
+			<p>
+				Enter Hashtags for the event:
+			<div class="chips chips-placeholder"></div>
 			</p>
 		</div>
 
@@ -57,40 +65,41 @@
 <script>
 	$(document).ready(function() {
 		$('select').formSelect();
+		$('.chips-placeholder').chips({
+	 placeholder: 'Add hashtags!',
+	 secondaryPlaceholder: 'Add more!',
+ });
 	});
 </script>
 
 <script>
-$('form').submit(function () {
+	$('form').submit(function() {
 
-  var value = $.trim($('#select').val());
-	var f1=0;
-	var f2=0;
-  if (value  === '') {
-      $("#venuerror").text("Invalid field value");
-			f1=1;
-  }
-	else {
+		var value = $.trim($('#select').val());
+		var f1 = 0;
+		var f2 = 0;
+		if (value === '') {
+			$("#venuerror").text("Invalid field value");
+			f1 = 1;
+		} else {
 			$("#venuerror").text("");
-			f1=0;
+			f1 = 0;
 		}
 
-	 value = $.trim($('#eventname').val());
+		value = $.trim($('#eventname').val());
 
-	 if (value  === '') {
-       $("#eventnamerror").text("Invalid field value");
- 			f2=1;
-   }
- 	else {
- 			$("#eventnamerror").text("");
- 			f2=0;
- 		}
+		if (value === '') {
+			$("#eventnamerror").text("Invalid field value");
+			f2 = 1;
+		} else {
+			$("#eventnamerror").text("");
+			f2 = 0;
+		}
 
-	if(f1==1 || f2 == 1)
-	{
-		return false;
-	}
-});
+		if (f1 == 1 || f2 == 1) {
+			return false;
+		}
+	});
 </script>
 
 {% endblock %}
