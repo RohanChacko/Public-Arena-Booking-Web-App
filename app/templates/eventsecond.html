@@ -12,7 +12,7 @@
 					      {% for venue in venues %}
 						  	<option value="{{ venue.id }}">{{ venue.name }}</option>
 						  {% endfor %}
-					    </select>
+				</select>
 				<label style="color: black;">Select Venue<font color="red">*</font></label>
 				<span style="color: red;" id="venuerror"></span>
 			</div>
@@ -54,6 +54,7 @@
 				<div class="chips chips-placeholder">
 		     <input class="custom-class" id="hash" name="hashtag">
 		   </div>
+			 <span style="color: red;" id="hasherror"></span>
 			</p>
 		</div>
 
@@ -80,11 +81,23 @@ $('#form').submit(function() {
 	var value = $.trim($('#select').val());
 	var f1 = 0;
 	var f2 = 0;
+	var f0 = 0;
 	var instance = M.Chips.getInstance($('.chips-placeholder'));
 	tags=[];
+	var word;
 	for(i=0;i<instance.chipsData.length;i++)
 	{
-		tags[i]=instance.chipsData[i].tag;
+		word = instance.chipsData[i].tag;
+		if(word.charAt(0) != "#")
+		{
+			f0 = 1;
+			$("#hasherror").text("Please put a '#' before the tag you want to add");
+			break;
+		}
+		else{
+			f0 = 0;
+			tags[i]=instance.chipsData[i].tag;
+		}
 	}
 	if (value === '') {
 		$("#venuerror").text("Invalid field value");
@@ -104,7 +117,7 @@ $('#form').submit(function() {
 		f2 = 0;
 	}
 
-	if (f1 == 1 || f2 == 1) {
+	if (f0 == 1 || f1 == 1 || f2 == 1) {
 		return false;
 	}
 	else{

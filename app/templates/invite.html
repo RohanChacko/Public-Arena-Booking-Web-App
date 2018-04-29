@@ -19,19 +19,47 @@
 
 <div class="container">
   <div class="row">
-    <h5>Invited peeps</h5>
-
+    <div class="col s6">
+    <h5>Send Invitations to:</h5>
     <ul>
       {% for invite in invite %}
-      <li>{{ invite.username }}</li>
+      <li>{{ invite.username }} - username.status</li>
       {% endfor %}
     </ul>
-
+    </div>
   </div>
+  <div class="row">
+  <div class="col s6">
+    <div class="col s4">
+    <div class="card-panel green">
+     <span class="white-text">
+       <p class="center-align">Accepted</p>
+
+     </span>
+   </div>
+  </div>
+
+   <div class="col s4">
+   <div class="card-panel red">
+    <span class="white-text">
+      <p class="center-align">Declined</p>
+
+    </span>
+  </div>
+  </div>
+  <div class="col s4">
+  <div class="card-panel teal">
+   <span class="white-text">
+     <p class="center-align">Pending</p>
+   </span>
+ </div>
+</div>
+  </div>
+  </div>
+
 </div>
 
-
-
+<div class="container">
 <form class="col s12" action="{{ url_for('invite', username=current_user.username, event_id=event) }}" method="post">
   <div class="row">
     <div class="input-field col s12">
@@ -45,6 +73,7 @@
       </button>
 
 </form>
+</div>
 
 
 
