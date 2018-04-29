@@ -132,11 +132,12 @@
         <!--End of overlay-->
         {% else %}
           <li>
-            <form>
+            <form action="{{ url_for('search', username=current_user.username) }}" method="post">
             <div class="input-field">
-              <input id="search" type="search" required>
+              <input id="search" name="searchstring" type="search" required>
               <label class="label-icon" for="search"><i class="material-icons">search</i></label>
               <i class="material-icons">close</i>
+              <button name="action" type="submit">Search</button>
           </form>
         </li>
         <li><a href="/logout"><i class="material-icons left">account_circle</i>Log Out</a>
