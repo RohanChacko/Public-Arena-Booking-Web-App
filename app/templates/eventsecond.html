@@ -4,7 +4,7 @@
 
 <div class="container">
 	<h4>Venue Type & Event Type</h4>
-	<form action="{{ url_for('confirm', username=current_user.username) }}" method="post">
+	<form id="form" action="{{ url_for('confirm', username=current_user.username) }}" name="forms" onsubmit="return validateF()" method="post">
 		<div class="row">
 			<div class="input-field col s12 m6">
 				<select name="venue" id="select">
@@ -52,7 +52,7 @@
 			<p>
 				Enter Hashtags for the event:
 				<div class="chips chips-placeholder">
-		     <input class="custom-class" name="hashtag">
+		     <input class="custom-class" id="hash" name="hashtag">
 		   </div>
 			</p>
 		</div>
@@ -75,33 +75,43 @@
 </script>
 
 <script>
-	$('form').submit(function() {
 
-		var value = $.trim($('#select').val());
-		var f1 = 0;
-		var f2 = 0;
-		if (value === '') {
-			$("#venuerror").text("Invalid field value");
-			f1 = 1;
-		} else {
-			$("#venuerror").text("");
-			f1 = 0;
-		}
+$('#form').submit(function() {
+	var value = $.trim($('#select').val());
+	var f1 = 0;
+	var f2 = 0;
+	var instance = M.Chips.getInstance($('.chips-placeholder'));
+	tags=[];
+	for(i=0;i<instance.chipsData.length;i++)
+	{
+		tags[i]=instance.chipsData[i].tag;
+	}
+	if (value === '') {
+		$("#venuerror").text("Invalid field value");
+		f1 = 1;
+	} else {
+		$("#venuerror").text("");
+		f1 = 0;
+	}
 
-		value = $.trim($('#eventname').val());
+	value = $.trim($('#eventname').val());
 
-		if (value === '') {
-			$("#eventnamerror").text("Invalid field value");
-			f2 = 1;
-		} else {
-			$("#eventnamerror").text("");
-			f2 = 0;
-		}
+	if (value === '') {
+		$("#eventnamerror").text("Invalid field value");
+		f2 = 1;
+	} else {
+		$("#eventnamerror").text("");
+		f2 = 0;
+	}
 
-		if (f1 == 1 || f2 == 1) {
-			return false;
-		}
-	});
+	if (f1 == 1 || f2 == 1) {
+		return false;
+	}
+	else{
+		$('input[name="hashtag"]').val(tags);
+		return true;
+	}
+});
 </script>
 
 {% endblock %}
