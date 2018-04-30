@@ -1,27 +1,31 @@
 {% extends "base.html" %} {% block content0 %}
 
-<p>Search results for </p>      <!--'{{give search string}}'-->
+<p>Search results for '{{ string }}'</p>
 
-<!--<div class="row">
-for res in range(results|length) }
+<div class="container">
+<div class="row">
+{% for res in results %}
     <div class="col s12 m6">
-      <div id="{ results[res].id }" class="card hoverable blue-grey darken-1">
-        <a href = "#">
+      <div id="{{ res.id }}" class="card hoverable blue-grey darken-1">
+        <a href = "{{ url_for('confirm', username=current_user.username, event_id=res.id) }}">
           <div class="card-content white-text">
-            <span class="card-title">{results[res].name }</span>
-              <p>Event type: { results[res].type } <br> Venue type: { results[res].venue } <br> Date: {results[res].date} <br> Start time: { results[res].start_time } <br> End time: { results[res].end_time }
+            <span class="card-title">{{ res.name }}</span>
+              <p>Event type: {{ res.type }} <br> Venue type: {{ res.venue }} <br> Date: {{ res.date }} <br> Start time: {{ res.start_time }} <br> End time: {{ res.end_time }}
               </p>
           </div>
         </a>
-        if event.creator == current_user.username
+        {% if res.creator == current_user.username %}
         <div class="card-action">
-            <a href="{{ url_for('events',username=current_user.username)}}" class="left-align">Delete</a>
-        { endif }
+          <form action="{{ url_for('events',username=current_user.username) }}" method="post">
+              <input class="btn waves-effect waves-light" type="submit" name="action" value="delete" style="color:white;"/>
+              <input name="event" value="{{ res.id }}" type="hidden">
+          </form>
         </div>
+        {% endif %}
       </div>
     </div>
-    { endif }
-  { endfor }
+  {% endfor %}
 </div>
--->
+</div>
+
 {% endblock %}

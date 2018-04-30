@@ -67,12 +67,16 @@ def user(username=None):
     else:
         return redirect(url_for('index'))
 
-@app.route('/search', methods=['POST'])
+@app.route('/search', methods=['POST', 'GET'])
 def search():
+    if request.method == 'GET':
+        return redirect(url_for('index'))
     searchstring = request.form['searchstring']
+    print(searchstring)
     pattern = '%' + searchstring + '%'
     events = db.engine.execute("SELECT * FROM events WHERE name LIKE :pattern OR hash LIKE :pattern OR creator_id IN (SELECT id FROM user WHERE username LIKE :pattern)", {'pattern': pattern})
-    return render_template('events.html', events_list=events)
+    results = get_event_data_multiple(events)
+    return render_template('searchres.html', results=results, string=searchstring)
 
 
 
