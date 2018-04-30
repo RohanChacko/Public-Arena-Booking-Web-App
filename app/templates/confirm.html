@@ -20,7 +20,7 @@
 				<h6>Event Creator:</h6>{{ event.creator }}<br>
 			</div>
 		</div>
-		<button class="btn waves-effect waves-light" href="{{ url_for('invite', username=current_user.username, event_id=event.id) }}" name="action">Send invites
+		<button class="btn waves-effect waves-light" name="action"><a style="text-decoration:none; color:white" href="{{ url_for('invite', username=current_user.username, event_id=event_id) }}">Send invites</a>
 		</button>
 	</section>
 

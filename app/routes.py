@@ -105,7 +105,7 @@ def confirm(username=None):
         venue = event[3]
         venue_details = db.engine.execute(
             "SELECT * FROM venues WHERE id==:id", {'id': venue}).fetchone()
-        return render_template('confirm.html', event=get_event_data_single(event), venue=venue_details)
+        return render_template('confirm.html', event_id=event_id, event=get_event_data_single(event), venue=venue_details)
     elif request.method == 'POST':
         venue = request.form['venue']
         name = request.form['name']
@@ -116,10 +116,9 @@ def confirm(username=None):
         #SAUJAS, WE DONT HAVE DESCRIPTION
         #type = request.form['eventype']
         user_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username': username}).fetchall()[0][0]
-        db.engine.execute("INSERT INTO events (name, description, venue_id, creator_id, start_time, end_time, type, hash) VALUES (:name, :description, :venue_id, :creator_id, :start_time, :end_time, :type, :tags)", {
-                          'name': name, 'description': description, 'venue_id': venue, 'creator_id': user_id, 'start_time': session['start'], 'end_time': session['end'], 'type': type, 'tags':tags})
-        venue_details = db.engine.execute(
-            "SELECT * FROM venues WHERE id==:id", {'id': venue}).fetchall()
+        insert = db.engine.execute("INSERT INTO events (name, description, venue_id, creator_id, start_time, end_time, type, hash) VALUES (:name, :description, :venue_id, :creator_id, :start_time, :end_time, :type, :tags)", {'name': name, 'description': description, 'venue_id': venue, 'creator_id': user_id, 'start_time': session['start'], 'end_time': session['end'], 'type': type, 'tags':tags})
+        event_id = insert.lastrowid
+        venue_details = db.engine.execute("SELECT * FROM venues WHERE id==:id", {'id': venue}).fetchall()
         db.session.commit()
         #print(db.engine.execute("SELECT * FROM events").fetchall())
         date = time.strftime("%d/%m/%Y", time.localtime(session['start']))
@@ -127,24 +126,37 @@ def confirm(username=None):
         end = time.strftime("%H:%M", time.localtime(session['end']))
         event = {'date': date, 'start': start, 'end': end, 'tags': ' #'.join(tags.split('#')), 'type': ['Public', 'Private'][type], 'name': name, 'description': description}
         #print(event, venue_details)
-        return render_template('confirm.html', event=event, venue=venue_details[0])
+        return render_template('confirm.html', event_id=event_id, event=event, venue=venue_details[0])
 
 
-@app.route('/user/<username>/events', methods=['GET'])
+@app.route('/user/<username>/events', methods=['GET', 'POST'])
 @login_required
 def events(username=None):
-    id = db.engine.execute("SELECT id FROM user WHERE username == :username", {
-                           'username': username}).fetchall()[0][0]
-    # print(id)
+    if request.method == 'POST':
+        if request.form['action'] == 'decline':
+            invitee_id = request.form['invitee']
+            event_id = request.form['event']
+            db.engine.execute("UPDATE invites SET status = 2 WHERE (invitee_id == :invitee AND event_id == :event)", {'invitee': invitee_id, 'event': event_id})
+        if request.form['action'] == 'accept':
+            invitee_id = request.form['invitee']
+            event_id = request.form['event']
+            db.engine.execute("UPDATE invites SET status = 1 WHERE (invitee_id == :invitee AND event_id == :event)", {'invitee': invitee_id, 'event': event_id})
+        if request.form['action'] == 'delete':
+            event_id = request.form['event']
+            db.engine.execute("DELETE FROM events WHERE id == :id", {'id': event_id})
+            db.session.commit()
+
+    id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username': username}).fetchall()[0][0]
     public_events = db.engine.execute(
         "SELECT * FROM events WHERE type == 0").fetchall()
     private_events = db.engine.execute(
         "SELECT * FROM events WHERE type == 1 AND ((id IN (SELECT event_id FROM invites WHERE invitee_id == :id AND status == 1)) OR creator_id == :id)", {'id': id}).fetchall()
     invitations = db.engine.execute("SELECT * FROM events WHERE type == 1 AND (id IN (SELECT event_id FROM invites WHERE invitee_id == :id AND status == 0))", {'id': id}).fetchall()
+    print(invitations)
     public_events_list = get_event_data_multiple(public_events)
     private_events_list = get_event_data_multiple(private_events)
     invitations_list = get_event_data_multiple(invitations)
-    return render_template('events.html', public_events=public_events_list, private_events=private_events_list, invitations=invitations_list)
+    return render_template('events.html', public_events=public_events_list, private_events=private_events_list, invitations=invitations_list, invitee_id=id)
 
 
 @app.route('/user/<username>/invite/<int:event_id>', methods=['GET', 'POST'])
