@@ -25,8 +25,13 @@
         {% if current_user.is_anonymous %}
         <li class="active"><a href="#">Home</a></li>
         {% else %}
-        <li class="active"><a href="{{ url_for('user', username=current_user.username) }}">Dashboard</a></li>
-        <li><a href="{{ url_for('events', username=current_user.username) }}">Events</a></li>
+          {% if request.path ==  "/user/"+current_user.username %}
+            <li class="active"><a href="{{ url_for('user', username=current_user.username) }}">Dashboard</a></li>
+            <li><a href="{{ url_for('events', username=current_user.username) }}">Events</a></li>
+          {% else %}
+            <li><a href="{{ url_for('user', username=current_user.username) }}">Dashboard</a></li>
+            <li class ="active"><a href="{{ url_for('events', username=current_user.username) }}">Events</a></li>
+          {% endif %}
         {% endif %}
     </ul>
 
@@ -132,7 +137,11 @@
         <!--End of overlay-->
         {% else %}
           <li>
+<<<<<<< HEAD
+            <form action="" method="post">
+=======
             <form action="{{ url_for('search', username=current_user.username) }}" method="post">
+>>>>>>> e7b42dfee521e5bc614298368273634029588fb5
             <div class="input-field">
               <input id="search" name="searchstring" type="search" required>
               <label class="label-icon" for="search"><i class="material-icons">search</i></label>

@@ -1,23 +1,115 @@
 {% extends "base.html" %} {% block content0 %}
 
-<div class="container">
-  <div class="row">
+<ul class="tabs tabs-fixed-width tab-demo z-depth-1" style="background-color:cadetblue;">
+  <li class="tab"><a href="#PublicEvents" class="active" style="color:white;">Public Events</a></li>
+  <li class="tab"><a href="#PrivateEvents" style="color:white;">Private Events</a></li>
+  <li class="tab"><a href="#Pending" style="color:white;">Pending Invitations</a></li>
+</ul>
+<!--Public Events-->
+<div class="container" id="PublicEvents">
 
+<h5 class="center-align"> Public Events</h5>
+{% for event in range(events_list|length) %}
+  {% if event%2 == 0 %}
+  <div class="row">
+    {% endif %}
     <div class="col s12 m6">
-      {% for event in events_list %}
-      <div id="{{ event.id }}" class="card hoverable blue-grey darken-1">
-        <div class="card-content white-text">
-          <span class="card-title">{{ event.name }}</span>
-          <p>Event type: {{ event.type }} <br> Venue type: {{ event.venue }} <br> Date: {{event.date}} <br> Start time: {{ event.start_time }} <br> End time: {{ event.end_time }}
-          </p>
-        </div>
+      <div id="{{ events_list[event].id }}" class="card hoverable blue-grey darken-1">
+        <a href = "#">
+          <div class="card-content white-text">
+            <span class="card-title">{{ events_list[event].name }}</span>
+              <p>Event type: {{ events_list[event].type }} <br> Venue type: {{ events_list[event].venue }} <br> Date: {{events_list[event].date}} <br> Start time: {{ events_list[event].start_time }} <br> End time: {{ events_list[event].end_time }}
+              </p>
+
+          </div>
+        </a>
+        <!-- if event.creator == current_user.username -->
         <div class="card-action">
-          <a href="{{ url_for('invite', username=current_user.username, event_id=event.id) }}">Invite People</a>
+            <a href="{{ url_for('events',username=current_user.username)}}" class="left-align">Delete</a>
+        <!-- endif -->
         </div>
       </div>
-      {% endfor %}
     </div>
-  </div>
+    {% if event%2 == 1 or event == (events_list|length - 1) %}
+    </div>
+    {% endif %}
+  {% endfor %}
 </div>
+
+
+<!--Private Events-->
+<div class="container" id="PrivateEvents">
+
+<h5 class="center-align"> Private Events</h5>
+{% for event in range(events_list|length) %}
+  {% if event%2 == 0 %}
+  <div class="row">
+    {% endif %}
+    <div class="col s12 m6">
+      <div id="{{ events_list[event].id }}" class="card hoverable blue-grey darken-1">
+        <a href = "#">
+          <div class="card-content white-text">
+            <span class="card-title">{{ events_list[event].name }}</span>
+              <p>Event type: {{ events_list[event].type }} <br> Venue type: {{ events_list[event].venue }} <br> Date: {{events_list[event].date}} <br> Start time: {{ events_list[event].start_time }} <br> End time: {{ events_list[event].end_time }}
+              </p>
+
+          </div>
+        </a>
+        <div class="card-action">
+          <a href="{{ url_for('invite', username=current_user.username, event_id=events_list[event].id) }}">Invite People</a>
+
+          <!-- if event.creator == current_user.username -->
+            <a href="{{ url_for('events',username=current_user.username)}}" class="left-align">Delete</a>
+          <!-- endif -->
+        </div>
+      </div>
+    </div>
+    {% if event%2 == 1 or event == (events_list|length - 1) %}
+    </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+
+<!--Pending Invitations-->
+
+<div class="container" id="Pending">
+
+<h5 class="center-align"> Pending Invitations</h5>
+{% for event in range(events_list|length) %}
+  {% if event%2 == 0 %}
+  <div class="row">
+    {% endif %}
+    <div class="col s12 m6">
+      <div id="{{ events_list[event].id }}" class="card hoverable blue-grey darken-1">
+        <a href = "#">
+          <div class="card-content white-text">
+            <span class="card-title">{{ events_list[event].name }}</span>
+              <p>Event type: {{ events_list[event].type }} <br> Venue type: {{ events_list[event].venue }} <br> Date: {{events_list[event].date}} <br> Start time: {{ events_list[event].start_time }} <br> End time: {{ events_list[event].end_time }}
+              </p>
+
+          </div>
+        </a>
+        <div class="card-action">
+            <a href="{{ url_for('events',username=current_user.username)}}">Accept</a>
+            <a href="{{ url_for('events',username=current_user.username)}}">Decline</a>             <!--change href to confirm.html-->
+        </div>
+      </div>
+    </div>
+    {% if event%2 == 1 or event == (events_list|length - 1) %}
+    </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+
+<script>
+  $(document).ready(function() {
+    $('.tabs').tabs();
+    M.toast({html: 'Click on the card to get confirmation receipt!', classes: 'rounded tosts'});
+    $('.tosts').css({"background-color":"yellow","color":"black"});
+    $('.indicator').css({"background-color":"yellow"});
+  });
+</script>
 
 {% endblock%}
