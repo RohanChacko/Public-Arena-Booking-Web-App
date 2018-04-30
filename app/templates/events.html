@@ -9,28 +9,28 @@
 <div class="container" id="PublicEvents">
 
 <h5 class="center-align"> Public Events</h5>
-{% for event in range(events_list|length) %}
-  {% if event%2 == 0 %}
+{% for event in public_events %}
+  {% if loop.index0%2 == 0 %}
   <div class="row">
     {% endif %}
     <div class="col s12 m6">
-      <div id="{{ events_list[event].id }}" class="card hoverable blue-grey darken-1">
-        <a href = "#">
+      <div id="{{ event.id }}" class="card hoverable blue-grey darken-1">
+        <a href = "{{ url_for('confirm', username=current_user.username, event_id=event.id) }}">
           <div class="card-content white-text">
-            <span class="card-title">{{ events_list[event].name }}</span>
-              <p>Event type: {{ events_list[event].type }} <br> Venue type: {{ events_list[event].venue }} <br> Date: {{events_list[event].date}} <br> Start time: {{ events_list[event].start_time }} <br> End time: {{ events_list[event].end_time }}
+            <span class="card-title">{{ event.name }}</span>
+              <p> Venue: {{ event.venue }} <br> Date: {{event.date}} <br> Start time: {{ event.start_time }} <br> End time: {{ event.end_time }} <br> Creator: {{ event.creator}}
               </p>
 
           </div>
         </a>
-        <!-- if event.creator == current_user.username -->
+        {% if event.creator == current_user.username %}
         <div class="card-action">
             <a href="{{ url_for('events',username=current_user.username)}}" class="left-align">Delete</a>
-        <!-- endif -->
         </div>
+        {% endif %}
       </div>
     </div>
-    {% if event%2 == 1 or event == (events_list|length - 1) %}
+    {% if loop.index0%2 == 1 or loop.index0 == public_events|length - 1 %}
     </div>
     {% endif %}
   {% endfor %}
@@ -41,22 +41,22 @@
 <div class="container" id="PrivateEvents">
 
 <h5 class="center-align"> Private Events</h5>
-{% for event in range(events_list|length) %}
-  {% if event%2 == 0 %}
+{% for event in private_events %}
+  {% if loop.index0%2 == 0 %}
   <div class="row">
     {% endif %}
     <div class="col s12 m6">
-      <div id="{{ events_list[event].id }}" class="card hoverable blue-grey darken-1">
+      <div id="{{ event.id }}" class="card hoverable blue-grey darken-1">
         <a href = "#">
           <div class="card-content white-text">
-            <span class="card-title">{{ events_list[event].name }}</span>
-              <p>Event type: {{ events_list[event].type }} <br> Venue type: {{ events_list[event].venue }} <br> Date: {{events_list[event].date}} <br> Start time: {{ events_list[event].start_time }} <br> End time: {{ events_list[event].end_time }}
+            <span class="card-title">{{ event.name }}</span>
+               <p> Venue: {{ event.venue }} <br> Date: {{event.date}} <br> Start time: {{ event.start_time }} <br> End time: {{ event.end_time }}
               </p>
 
           </div>
         </a>
         <div class="card-action">
-          <a href="{{ url_for('invite', username=current_user.username, event_id=events_list[event].id) }}">Invite People</a>
+          <a href="{{ url_for('invite', username=current_user.username, event_id=event.id) }}">Invite People</a>
 
           <!-- if event.creator == current_user.username -->
             <a href="{{ url_for('events',username=current_user.username)}}" class="left-align">Delete</a>
@@ -64,7 +64,7 @@
         </div>
       </div>
     </div>
-    {% if event%2 == 1 or event == (events_list|length - 1) %}
+    {% if loop.index0%2 == 1 or loop.index0 == private_events|length - 1 %}
     </div>
     {% endif %}
   {% endfor %}
@@ -76,16 +76,16 @@
 <div class="container" id="Pending">
 
 <h5 class="center-align"> Pending Invitations</h5>
-{% for event in range(events_list|length) %}
-  {% if event%2 == 0 %}
+{% for event in invitations %}
+  {% if loop.index0%2 == 0 %}
   <div class="row">
     {% endif %}
     <div class="col s12 m6">
-      <div id="{{ events_list[event].id }}" class="card hoverable blue-grey darken-1">
+      <div id="{{ event.id }}" class="card hoverable blue-grey darken-1">
         <a href = "#">
           <div class="card-content white-text">
-            <span class="card-title">{{ events_list[event].name }}</span>
-              <p>Event type: {{ events_list[event].type }} <br> Venue type: {{ events_list[event].venue }} <br> Date: {{events_list[event].date}} <br> Start time: {{ events_list[event].start_time }} <br> End time: {{ events_list[event].end_time }}
+            <span class="card-title">{{ event.name }}</span>
+              <p>Venue: {{ event.venue }} <br> Date: {{event.date}} <br> Start time: {{ event.start_time }} <br> End time: {{ event.end_time }}
               </p>
 
           </div>
@@ -96,7 +96,7 @@
         </div>
       </div>
     </div>
-    {% if event%2 == 1 or event == (events_list|length - 1) %}
+    {% if loop.index0%2 == 1 or loop.index0 == invitations|length-1 %}
     </div>
     {% endif %}
   {% endfor %}
