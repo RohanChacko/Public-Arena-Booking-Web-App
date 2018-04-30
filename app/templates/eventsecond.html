@@ -1,11 +1,17 @@
 {% extends "base.html" %} {% block content0 %}
 
-<h2>Booking Form (2nd stage)</h2>
+<div class="container" style="width:56%;">
+<div class="card">
+<div class="card-image" style="background-color:#03a9f4;">
+    <div class="row">
+        <h5 style="color:white;padding:24px;" class="center-align">Provide more details</h5>
+    </div>
+</div>
 
-<div class="container">
-	<h4>Venue Type & Event Type</h4>
+<div class="card-content">
 	<form id="form" action="{{ url_for('confirm', username=current_user.username) }}" name="forms" onsubmit="return validateF()" method="post">
 		<div class="row">
+			<p style="color: black;">Select Venue<font color="red">*</font>:</p>
 			<div class="input-field col s12 m6">
 				<select name="venue" id="select">
 					      <option value="" disabled selected>Choose your option</option>
@@ -13,12 +19,12 @@
 						  	<option value="{{ venue.id }}">{{ venue.name }}</option>
 						  {% endfor %}
 				</select>
-				<label style="color: black;">Select Venue<font color="red">*</font></label>
 				<span style="color: red;" id="venuerror"></span>
 			</div>
 		</div>
 
 		<div class="row">
+			<p>Event Type: </p>
 			<p>
 				<label>
 			 <input name="eventype" type="radio" value="0" checked />
@@ -64,7 +70,8 @@
 
 	</form>
 </div>
-
+</div>
+</div>
 <script>
 	$(document).ready(function() {
 		$('select').formSelect();
