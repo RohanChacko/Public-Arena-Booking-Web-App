@@ -31,6 +31,7 @@ class Events(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     start_time = db.Column(db.Integer)
     end_time = db.Column(db.Integer)
+    hash = db.Column(db.String(500))
     type = db.Column(db.Integer)
 
 
