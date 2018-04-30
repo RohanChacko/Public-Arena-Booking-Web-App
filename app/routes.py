@@ -17,19 +17,32 @@ def index():
     form = LoginForm()
     reform = SignUp()
 
+    public_events = db.engine.execute("SELECT * FROM events WHERE type == 0").fetchall()
+    events_list = list()
+    for event in public_events:
+        venue_name = db.engine.execute("SELECT name FROM venues WHERE id == :id", {'id': event[3]}).fetchall()[0][0]
+        try:
+            creator = db.engine.execute("SELECT username FROM user WHERE id == :id", {'id': event[4]}).fetchall()[0][0]
+        except:
+            creator = ''
+        date = time.strftime("%d/%m/%Y", time.gmtime(event[5]))
+        start = time.strftime("%H:%M", time.gmtime(event[5]))
+        end = time.strftime("%H:%M", time.gmtime(event[6]))
+        events_list.append({'name': event[1], 'description': event[2], 'date': date, 'start_time': start, 'end_time': end, 'venue': venue_name, 'creator': creator})
+
+
     if form.submitlogin.data == 1 and reform.submitsignup.data == 0:
         if form.validate_on_submit():
             user = User.query.filter_by(username=form.username.data).first()
             if user is None or not user.check_password(form.password.data):
-                return "Wrong password bitch"
+                return render_template('index.html',failmsg=1,reform=reform, form=form, events=events_list)
 
             login_user(user, remember=form.remember_me.data)
 
             # next_page = request.args.get('next')                                # causes a problem if i access acc directly using url edit and then try to login to another acc through ID, password. So changed it for now.
             next_page = 'index'
-            # understand what it actually does xP
             if not next_page or url_parse(next_page).netloc != '':
-                next_page = url_for('user', username=form.username.data)            #
+                next_page = url_for('user', username=form.username.data)
             return redirect(url_for(next_page))
 
     elif reform.validate_on_submit():
@@ -39,19 +52,7 @@ def index():
         db.session.commit()
         return redirect(url_for('user', username=reform.Username2.data))
     else:
-        public_events = db.engine.execute("SELECT * FROM events WHERE type == 0").fetchall()
-        events_list = list()
-        for event in public_events:
-            venue_name = db.engine.execute("SELECT name FROM venues WHERE id == :id", {'id': event[3]}).fetchall()[0][0]
-            try:
-                creator = db.engine.execute("SELECT username FROM user WHERE id == :id", {'id': event[4]}).fetchall()[0][0]
-            except:
-                creator = ''
-            date = time.strftime("%d/%m/%Y", time.gmtime(event[5]))
-            start = time.strftime("%H:%M", time.gmtime(event[5]))
-            end = time.strftime("%H:%M", time.gmtime(event[6]))
-            events_list.append({'name': event[1], 'description': event[2], 'date': date, 'start_time': start, 'end_time': end, 'venue': venue_name, 'creator': creator})
-        return render_template('index.html', title='Sign Up', reform=reform, form=form, events=events_list)
+        return render_template('index.html',failmsg=0,title='Sign Up', reform=reform, form=form, events=events_list)
 
 
 @app.route('/user/<username>')

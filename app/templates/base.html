@@ -37,7 +37,7 @@
 
       <ul class="right hide-on-med-and-down">
         {% if current_user.is_anonymous %}
-        <li onclick="openoverlay()"><a href="#"><i class="material-icons left">account_circle</i>Log in/Sign Up</a></li>
+        <li onclick="openoverlay()"><a href="#" id="allform" ><i class="material-icons left">account_circle</i>Log in/Sign Up</a></li>
 
         <!--Begin of overlay. Login page appears as overlay only if user is not logged in-->
 
@@ -181,6 +181,14 @@
   </footer>
 
   <script type="text/javascript" src="{{ url_for('static', filename='materialize.min.js') }}"></script>
+  <script>
+    $(document).ready(function() {
+      if(failmsg == 1){
+      $("#allform").trigger('click');
+      alert(failmsg);
+    }
+    });
+  </script>
 </body>
 
 
