@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, flash, url_for, session
 from app import app, db
+from app.utility import *
 from app.forms import LoginForm, SignUp
 from app.models import User, Venues, Events, Invites
 from flask_login import current_user, login_user, logout_user, login_required
@@ -95,29 +96,38 @@ def eventsecond(username=None):
     return render_template('eventsecond.html', venues=available_venues)
 
 
-@app.route('/user/<username>/confirm', methods=['POST'])
+@app.route('/user/<username>/confirm', methods=['POST', 'GET'])
 @login_required
 def confirm(username=None):
-    venue = request.form['venue']
-    name = request.form['name']
-    description = request.form['description']
-    type = int(request.form['eventype'])
-    tags = ''.join(request.form['hashtag'].split(','))
-    #SAUJAS, WE DONT HAVE DESCRIPTION
-    #type = request.form['eventype']
-    user_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username': username}).fetchall()[0][0]
-    db.engine.execute("INSERT INTO events (name, description, venue_id, creator_id, start_time, end_time, type, hash) VALUES (:name, :description, :venue_id, :creator_id, :start_time, :end_time, :type, :tags)", {
-                      'name': name, 'description': description, 'venue_id': venue, 'creator_id': user_id, 'start_time': session['start'], 'end_time': session['end'], 'type': type, 'tags':tags})
-    venue_details = db.engine.execute(
-        "SELECT * FROM venues WHERE id==:id", {'id': venue}).fetchall()
-    db.session.commit()
-    #print(db.engine.execute("SELECT * FROM events").fetchall())
-    date = time.strftime("%d/%m/%Y", time.gmtime(session['start']))
-    start = time.strftime("%H:%M", time.gmtime(session['start']))
-    end = time.strftime("%H:%M", time.gmtime(session['end']))
-    event = {'date': date, 'start': start, 'end': end, 'tags': ' #'.join(tags.split('#')), 'type': ['public', 'private'][type], 'name': name, 'description': description}
-    #print(event, venue_details)
-    return render_template('confirm.html', event=event, venue=venue_details[0])
+    if request.method == 'GET':
+        event_id = request.args['event_id']
+        event = db.engine.execute("SELECT * FROM events WHERE id == :id", {'id': event_id}).fetchone()
+        venue = event[3]
+        venue_details = db.engine.execute(
+            "SELECT * FROM venues WHERE id==:id", {'id': venue}).fetchone()
+        return render_template('confirm.html', event=get_event_data_single(event), venue=venue_details)
+    elif request.method == 'POST':
+        venue = request.form['venue']
+        name = request.form['name']
+        description = request.form['description']
+        type = int(request.form['eventype'])
+        print(type)
+        tags = ''.join(request.form['hashtag'].split(','))
+        #SAUJAS, WE DONT HAVE DESCRIPTION
+        #type = request.form['eventype']
+        user_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username': username}).fetchall()[0][0]
+        db.engine.execute("INSERT INTO events (name, description, venue_id, creator_id, start_time, end_time, type, hash) VALUES (:name, :description, :venue_id, :creator_id, :start_time, :end_time, :type, :tags)", {
+                          'name': name, 'description': description, 'venue_id': venue, 'creator_id': user_id, 'start_time': session['start'], 'end_time': session['end'], 'type': type, 'tags':tags})
+        venue_details = db.engine.execute(
+            "SELECT * FROM venues WHERE id==:id", {'id': venue}).fetchall()
+        db.session.commit()
+        #print(db.engine.execute("SELECT * FROM events").fetchall())
+        date = time.strftime("%d/%m/%Y", time.localtime(session['start']))
+        start = time.strftime("%H:%M", time.localtime(session['start']))
+        end = time.strftime("%H:%M", time.localtime(session['end']))
+        event = {'date': date, 'start': start, 'end': end, 'tags': ' #'.join(tags.split('#')), 'type': ['Public', 'Private'][type], 'name': name, 'description': description}
+        #print(event, venue_details)
+        return render_template('confirm.html', event=event, venue=venue_details[0])
 
 
 @app.route('/user/<username>/events', methods=['GET'])
@@ -129,19 +139,12 @@ def events(username=None):
     public_events = db.engine.execute(
         "SELECT * FROM events WHERE type == 0").fetchall()
     private_events = db.engine.execute(
-        "SELECT * FROM events WHERE id IN (SELECT event_id FROM invites WHERE (invitee_id == :id OR inviter_id == :id))", {'id': id}).fetchall()
-    events_list = list()
-    for event in public_events+private_events:
-        venue_name = db.engine.execute("SELECT name FROM venues WHERE id == :id", {'id': event[3]}).fetchall()[0][0]
-        try:
-            creator = db.engine.execute("SELECT username FROM user WHERE id == :id", {'id': event[4]}).fetchall()[0][0]
-        except:
-            creator = ''
-        date = time.strftime("%d/%m/%Y", time.mktime(datetime.fromtimestamp(event[5], tz=)))
-        start = time.strftime("%H:%M", time.mktime(datetime.fromtimestamp(event[5], tz=)))
-        end = time.strftime("%H:%M", time.mktime(datetime.fromtimestamp(event[6], tz=)))
-        events_list.append({'id': event[0], 'name': event[1], 'description': event[2], 'date': date, 'start_time': start, 'end_time': end, 'venue': venue_name, 'creator': creator})
-    return render_template('events.html', events_list=events_list)
+        "SELECT * FROM events WHERE type == 1 AND ((id IN (SELECT event_id FROM invites WHERE invitee_id == :id AND status == 1)) OR creator_id == :id)", {'id': id}).fetchall()
+    invitations = db.engine.execute("SELECT * FROM events WHERE type == 1 AND (id IN (SELECT event_id FROM invites WHERE invitee_id == :id AND status == 0))", {'id': id}).fetchall()
+    public_events_list = get_event_data_multiple(public_events)
+    private_events_list = get_event_data_multiple(private_events)
+    invitations_list = get_event_data_multiple(invitations)
+    return render_template('events.html', public_events=public_events_list, private_events=private_events_list, invitations=invitations_list)
 
 
 @app.route('/user/<username>/invite/<int:event_id>', methods=['GET', 'POST'])
@@ -149,25 +152,30 @@ def events(username=None):
 def invite(username=None, event_id=None):
     #print(db.engine.execute("SELECT * FROM user").fetchall())
     if request.method == 'GET':
-        invite = db.engine.execute(
-            "SELECT * FROM invites WHERE event_id == :event_id", {'event_id': event_id})
-        return render_template('invite.html', invite=invite, event=event_id)
+        #invite = db.engine.execute(
+        #    "SELECT * FROM invites WHERE event_id == :event_id", {'event_id': event_id})
+        accepted_invites = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id AND status == 1)", {'event_id': event_id}).fetchall()
+        declined_invites = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id AND status == 2)", {'event_id': event_id}).fetchall()
+        pending_invites = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id AND status == 0)", {'event_id': event_id}).fetchall()
+        return render_template('invite.html', accepted=accepted_invites, declined=declined_invites, pending=pending_invites, event=event_id, failed=False)
     elif request.method == 'POST':
         invitee = request.form['invitee']
-        inviter_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {
-                                       'username': username}).fetchall()[0][0]
-        invitee_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {
-                                       'username': invitee}).fetchall()[0][0]
-        if inviter_id == invitee_id:
-            invite = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id)", {
-                                       'event_id': event_id}).fetchall()
-            return render_template('invite.html', invite=invite, event=event_id)
-        db.engine.execute("INSERT INTO invites (inviter_id, invitee_id, event_id, status) VALUES (:inviter_id, :invitee_id, :event_id, 0)", {
-                          'inviter_id': inviter_id, 'invitee_id': invitee_id, 'event_id': event_id})
-        db.session.commit()
-        invite = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id)", {
-                                   'event_id': event_id}).fetchall()
-        return render_template('invite.html', invite=invite, event=event_id)
+        failed=False
+        try:
+            inviter_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username': username}).fetchall()[0][0]
+            invitee_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username': invitee}).fetchall()[0][0]
+            if inviter_id == invitee_id:
+                invite = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id)", {
+                                           'event_id': event_id}).fetchall()
+                return render_template('invite.html', invite=invite, event=event_id)
+            db.engine.execute("INSERT INTO invites (inviter_id, invitee_id, event_id, status) VALUES (:inviter_id, :invitee_id, :event_id, 0)", {'inviter_id': inviter_id, 'invitee_id': invitee_id, 'event_id': event_id})
+            db.session.commit()
+        except:
+            failed=True
+        accepted_invites = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id AND status == 1)", {'event_id': event_id}).fetchall()
+        declined_invites = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id AND status == 2)", {'event_id': event_id}).fetchall()
+        pending_invites = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id AND status == 0)", {'event_id': event_id}).fetchall()
+        return render_template('invite.html', accepted=accepted_invites, declined=declined_invites, pending=pending_invites, event=event_id, failed=failed)
 
 
 @app.route('/logout')
@@ -175,7 +183,6 @@ def invite(username=None, event_id=None):
 def logout():
     logout_user()
     return redirect(url_for('index'))
-
 
 if __name__ == '__main__':
     app.debug()

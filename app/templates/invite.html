@@ -18,7 +18,7 @@
 </style>-->
 
 <div class="container">
-  <div class="row">
+  <div class="row"><!--
     <div class="col s6">
     <h5>Send Invitations to:</h5>
     <ul>
@@ -26,14 +26,17 @@
       <li>{{ invite.username }} - username.status</li>
       {% endfor %}
     </ul>
-    </div>
+  </div>-->
   </div>
   <div class="row">
   <div class="col s6">
     <div class="col s4">
     <div class="card-panel green">
      <span class="white-text">
-       <p class="center-align">Accepted</p>
+       <h6>Accepted</h6>
+       <p class="center-align">{% for inv in accepted %}
+       <li>{{ inv[0] }}</li>
+       {% endfor %}</p>
 
      </span>
    </div>
@@ -42,7 +45,10 @@
    <div class="col s4">
    <div class="card-panel red">
     <span class="white-text">
-      <p class="center-align">Declined</p>
+      <h6>Declined</h6>
+      <p class="center-align">{% for inv in declined %}
+      <li>{{ inv[0] }}</li>
+      {% endfor %}</p>
 
     </span>
   </div>
@@ -50,7 +56,10 @@
   <div class="col s4">
   <div class="card-panel teal">
    <span class="white-text">
-     <p class="center-align">Pending</p>
+     <h6>Pending</h6>
+     <p class="center-align">{% for inv in pending %}
+     <li>{{ inv[0] }}</li>
+     {% endfor %}</p>
    </span>
  </div>
 </div>
@@ -71,6 +80,9 @@
   <button class="btn waves-effect waves-light" type="submit" name="action">Submit
           <i class="material-icons right">send</i>
       </button>
+  {% if failed %}
+  <p style="color:red">Could not invite that user :(</p>
+  {% endif %}
 
 </form>
 </div>

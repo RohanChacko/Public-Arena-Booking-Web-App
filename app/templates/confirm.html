@@ -17,11 +17,14 @@
 				<h6>Venue Type:</h6> {{ venue.type }}<br>
 				<h6>Venue:</h6> {{ venue.name }}<br>
 				<h6>Date:</h6> {{ event.date }}<br>
-				<h6>Start time:</h6> {{ event.start }}<br>
-				<h6>End time:</h6> {{ event.end }}<br>
+				<h6>Start time:</h6> {{ event.start_time }}<br>
+				<h6>End time:</h6> {{ event.end_time }}<br>
 				<h6>Event Type:</h6>{{ event.type }}<br>
+				<h6>Event Creator:</h6>{{ event.creator }}<br>
 			</div>
 		</div>
+		<button class="btn waves-effect waves-light" href="{{ url_for('invite', username=current_user.username, event_id=event.id) }}" name="action">Send invites
+		</button>
 	</section>
 
 </div>
