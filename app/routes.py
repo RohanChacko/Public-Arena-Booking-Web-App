@@ -6,6 +6,7 @@ from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 import time
 from sqlalchemy import and_
+import datetime
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -68,7 +69,7 @@ def user(username=None):
 def search():
     searchstring = request.form['searchstring']
     pattern = '%' + searchstring + '%'
-    events = db.engine.execute("SELECT * FROM events WHERE name LIKE :pattern OR creator_id IN (SELECT id FROM user WHERE username LIKE :pattern)", {'pattern': pattern})
+    events = db.engine.execute("SELECT * FROM events WHERE name LIKE :pattern OR hash LIKE :pattern OR creator_id IN (SELECT id FROM user WHERE username LIKE :pattern)", {'pattern': pattern})
     return render_template('events.html', events_list=events)
 
 
@@ -100,11 +101,13 @@ def confirm(username=None):
     venue = request.form['venue']
     name = request.form['name']
     description = request.form['description']
+    type = int(request.form['eventype'])
+    tags = ''.join(request.form['hashtag'].split(','))
     #SAUJAS, WE DONT HAVE DESCRIPTION
     #type = request.form['eventype']
     user_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username': username}).fetchall()[0][0]
-    db.engine.execute("INSERT INTO events (name, description, venue_id, creator_id, start_time, end_time, type) VALUES (:name, :description, :venue_id, :creator_id, :start_time, :end_time, :type)", {
-                      'name': name, 'description': description, 'venue_id': venue, 'creator_id': user_id, 'start_time': session['start'], 'end_time': session['end'], 'type': 0})
+    db.engine.execute("INSERT INTO events (name, description, venue_id, creator_id, start_time, end_time, type, hash) VALUES (:name, :description, :venue_id, :creator_id, :start_time, :end_time, :type, :tags)", {
+                      'name': name, 'description': description, 'venue_id': venue, 'creator_id': user_id, 'start_time': session['start'], 'end_time': session['end'], 'type': type, 'tags':tags})
     venue_details = db.engine.execute(
         "SELECT * FROM venues WHERE id==:id", {'id': venue}).fetchall()
     db.session.commit()
@@ -112,7 +115,7 @@ def confirm(username=None):
     date = time.strftime("%d/%m/%Y", time.gmtime(session['start']))
     start = time.strftime("%H:%M", time.gmtime(session['start']))
     end = time.strftime("%H:%M", time.gmtime(session['end']))
-    event = {'date': date, 'start': start, 'end': end}
+    event = {'date': date, 'start': start, 'end': end, 'tags': ' #'.join(tags.split('#')), 'type': ['public', 'private'][type], 'name': name, 'description': description}
     #print(event, venue_details)
     return render_template('confirm.html', event=event, venue=venue_details[0])
 
@@ -134,9 +137,9 @@ def events(username=None):
             creator = db.engine.execute("SELECT username FROM user WHERE id == :id", {'id': event[4]}).fetchall()[0][0]
         except:
             creator = ''
-        date = time.strftime("%d/%m/%Y", time.gmtime(event[5]))
-        start = time.strftime("%H:%M", time.gmtime(event[5]))
-        end = time.strftime("%H:%M", time.gmtime(event[6]))
+        date = time.strftime("%d/%m/%Y", time.mktime(datetime.fromtimestamp(event[5], tz=)))
+        start = time.strftime("%H:%M", time.mktime(datetime.fromtimestamp(event[5], tz=)))
+        end = time.strftime("%H:%M", time.mktime(datetime.fromtimestamp(event[6], tz=)))
         events_list.append({'id': event[0], 'name': event[1], 'description': event[2], 'date': date, 'start_time': start, 'end_time': end, 'venue': venue_name, 'creator': creator})
     return render_template('events.html', events_list=events_list)
 
