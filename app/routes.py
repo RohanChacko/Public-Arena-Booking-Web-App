@@ -177,8 +177,7 @@ def invite(username=None, event_id=None):
             inviter_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username': username}).fetchall()[0][0]
             invitee_id = db.engine.execute("SELECT id FROM user WHERE username == :username", {'username': invitee}).fetchall()[0][0]
             if inviter_id == invitee_id:
-                invite = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id)", {
-                                           'event_id': event_id}).fetchall()
+                invite = db.engine.execute("SELECT username FROM user WHERE id IN (SELECT invitee_id FROM invites WHERE event_id == :event_id)", {'event_id': event_id}).fetchall()
                 return render_template('invite.html', invite=invite, event=event_id)
             db.engine.execute("INSERT INTO invites (inviter_id, invitee_id, event_id, status) VALUES (:inviter_id, :invitee_id, :event_id, 0)", {'inviter_id': inviter_id, 'invitee_id': invitee_id, 'event_id': event_id})
             db.session.commit()
