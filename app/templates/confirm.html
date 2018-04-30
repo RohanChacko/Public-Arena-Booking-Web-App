@@ -2,16 +2,13 @@
 
 <div class="container">
 
-	<div class="row s6">
-		<h1>Your booking is confirmed. The God is happy.</h1>
-	</div>
-
-	<section style="margin:3em;">
+		<section style="margin:3em;">
 		<div class="container section" style="font-family:Roboto light; color: #00e7ae; background-color: #303c42; text-align: center;">
-			<h5>Given below are the booking details.</h5>
+			<h5 style="margin-bottom:1em;">Booking confirmed</h5>
+			<hr style="background-color:#00e7ae;color:#00e7ae;border-color: #00e7ae;">
 			<div class="row">
-				<!--Need to pass the required info here-->
-				<h6>Venue Type:</h6> {{ venue.type }}<br>
+				<br>
+				<h6>Venue Type: </h6>{{ venue.type }}<br>
 				<h6>Venue:</h6> {{ venue.name }}<br>
 				<h6>Date:</h6> {{ event.date }}<br>
 				<h6>Start time:</h6> {{ event.start }}<br>
