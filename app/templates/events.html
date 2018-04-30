@@ -50,7 +50,7 @@
     {% endif %}
     <div class="col s12 m6">
       <div id="{{ event.id }}" class="card hoverable blue-grey darken-1">
-        <a href = "#">
+        <a href = "{{ url_for('confirm', username=current_user.username, event_id=event.id) }}">
           <div class="card-content white-text">
             <span class="card-title">{{ event.name }}</span>
                <p> Venue: {{ event.venue }} <br> Date: {{event.date}} <br> Start time: {{ event.start_time }} <br> End time: {{ event.end_time }}
@@ -93,7 +93,7 @@
     {% endif %}
     <div class="col s12 m6">
       <div id="{{ event.id }}" class="card hoverable blue-grey darken-1">
-        <a href = "#">
+        <a href = "{{ url_for('confirm', username=current_user.username, event_id=event.id) }}">
           <div class="card-content white-text">
             <span class="card-title">{{ event.name }}</span>
               <p>Venue: {{ event.venue }} <br> Date: {{event.date}} <br> Start time: {{ event.start_time }} <br> End time: {{ event.end_time }}
